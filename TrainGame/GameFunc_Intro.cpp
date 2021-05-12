@@ -3,7 +3,17 @@
 
 Intro::Intro()
 {
-	SDL_Surface* intro_surface = IMG_Load("../../Resources/intro.png");
+	g_button_rect_1.x = 329;
+	g_button_rect_1.y = 406;
+	g_button_rect_1.w = 215;
+	g_button_rect_1.h = 90;
+
+	g_button_rect_2.x = 601;
+	g_button_rect_2.y = 406;
+	g_button_rect_2.w = 215;
+	g_button_rect_2.h = 90;
+
+	SDL_Surface* intro_surface = IMG_Load("../../Resources/Intro.png");
 	intro_texture_ = SDL_CreateTextureFromSurface(g_renderer, intro_surface);
 	SDL_FreeSurface(intro_surface);
 	intro_source_rect_ = { 0, 0 ,1200 ,800 };
@@ -34,10 +44,24 @@ void Intro::HandleEvents()
 
 		case SDL_MOUSEBUTTONDOWN:
 
-			// If the mouse left button is pressed. 
 			if (event.button.button == SDL_BUTTON_LEFT)
 			{
-				g_current_game_phase = PHASE_PLATFORM;
+				int mouse_x = event.button.x;
+				int mouse_y = event.button.y;
+
+				// 게임시작 버튼
+				if (mouse_x > g_button_rect_1.x &&
+					mouse_y > g_button_rect_1.y &&
+					mouse_x < g_button_rect_1.x + g_button_rect_1.w &&
+					mouse_y < g_button_rect_1.y + g_button_rect_1.h)
+					g_current_game_phase = PHASE_PLATFORM;
+
+				// 게임종료 버튼
+				else if (mouse_x > g_button_rect_2.x &&
+					mouse_y > g_button_rect_2.y &&
+					mouse_x < g_button_rect_2.x + g_button_rect_2.w &&
+					mouse_y < g_button_rect_2.y + g_button_rect_2.h)
+					g_flag_running = false;
 			}
 			break;
 
