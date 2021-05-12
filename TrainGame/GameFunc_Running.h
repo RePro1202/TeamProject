@@ -2,12 +2,8 @@
 
 #include "Core.h"
 
-class Running : public PhaseInterface
+class Running : public UserInterface
 {
-private:
-	SDL_Texture* g_background_texture;
-	SDL_Rect g_background_source_rect;
-	SDL_Rect g_background_destination_rect;
 public:
 	Running();
 	~Running();
