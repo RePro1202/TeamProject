@@ -3,6 +3,12 @@
 
 Platform::Platform()
 {
+	SDL_Surface* platform_surface = IMG_Load("../../Resources/Platform.png");
+	SDL_SetColorKey(platform_surface, SDL_TRUE, SDL_MapRGB(platform_surface->format, 200, 191, 231));
+	g_platform_texture = SDL_CreateTextureFromSurface(g_renderer, platform_surface);
+	SDL_FreeSurface(platform_surface);
+	g_platform_source_rect = { 0, 0 ,1200 ,800 };
+	g_platform_destination_rect = { 0, 0, g_platform_source_rect.w, g_platform_source_rect.h };
 }
 
 void Platform::Update()
@@ -11,10 +17,9 @@ void Platform::Update()
 
 void Platform::Render()
 {
-	SDL_SetRenderDrawColor(g_renderer, 255, 255, 0, 255);
-	SDL_RenderClear(g_renderer);
+	SDL_RenderCopy(g_renderer, g_platform_texture, &g_platform_source_rect, &g_platform_destination_rect);
 
-	UserInterface::Show_UI();
+	PhaseInterface::ShowUI();
 
 	SDL_RenderPresent(g_renderer);
 }

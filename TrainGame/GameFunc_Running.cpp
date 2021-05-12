@@ -3,6 +3,11 @@
 
 Running::Running()
 {
+	SDL_Surface* background_surface = IMG_Load("../../Resources/Background.png");
+	g_background_texture = SDL_CreateTextureFromSurface(g_renderer, background_surface);
+	SDL_FreeSurface(background_surface);
+	g_background_source_rect = { 0, 0 ,1200 ,800 };
+	g_background_destination_rect = { 0, 0, g_background_source_rect.w, g_background_source_rect.h };
 }
 
 void Running::Update()
@@ -11,10 +16,9 @@ void Running::Update()
 
 void Running::Render()
 {
-	SDL_SetRenderDrawColor(g_renderer, 255, 0, 255, 255);
-	SDL_RenderClear(g_renderer);
+	SDL_RenderCopy(g_renderer, g_background_texture, &g_background_source_rect, &g_background_destination_rect);
 
-	UserInterface::Show_UI();
+	PhaseInterface::ShowUI();
 
 	SDL_RenderPresent(g_renderer);
 }
