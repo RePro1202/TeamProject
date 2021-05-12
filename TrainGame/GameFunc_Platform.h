@@ -2,7 +2,7 @@
 
 #include "Core.h"
 
-class Platform : public PhaseInterface
+class Platform : public UserInterface
 {
 public:
 	Platform();

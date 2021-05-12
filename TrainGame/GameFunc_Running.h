@@ -2,7 +2,7 @@
 
 #include "Core.h"
 
-class Running : public PhaseInterface
+class Running : public UserInterface
 {
 public:
 	Running();

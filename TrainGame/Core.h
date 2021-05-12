@@ -26,7 +26,22 @@ extern SDL_Renderer* g_renderer;
 class PhaseInterface
 {
 public:
+	
 	virtual void HandleEvents() = 0;
 	virtual void Update() = 0;
 	virtual void Render() = 0;
+};
+
+class UserInterface :public PhaseInterface
+{
+private:
+	SDL_Texture* texture_; // the SDL_Texture 
+	SDL_Rect source_rectangle_[4]; // the rectangle for source image
+	SDL_Rect destination_rectangle_[4]; // for destination
+
+public:
+	UserInterface();
+	~UserInterface();
+
+	void Show_UI();
 };

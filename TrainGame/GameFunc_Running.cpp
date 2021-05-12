@@ -14,6 +14,7 @@ void Running::Render()
 	SDL_SetRenderDrawColor(g_renderer, 255, 0, 255, 255);
 	SDL_RenderClear(g_renderer);
 
+	UserInterface::Show_UI();
 
 	SDL_RenderPresent(g_renderer);
 }
