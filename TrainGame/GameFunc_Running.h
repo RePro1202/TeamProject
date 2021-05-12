@@ -5,9 +5,10 @@
 class Running : public PhaseInterface
 {
 private:
-	SDL_Texture* background_texture_;
-	SDL_Rect background_source_rect_;
-	SDL_Rect background_destination_rect_;
+	SDL_Texture* background_texture_[2];
+	SDL_Rect background_source_rect_[2];
+	SDL_Rect background_destination_rect_[2];
+
 public:
 	Running();
 	~Running();
