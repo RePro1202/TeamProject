@@ -4,6 +4,10 @@
 
 class Intro : public PhaseInterface
 {
+private:
+	SDL_Texture* intro_texture_;
+	SDL_Rect intro_source_rect_;
+	SDL_Rect intro_destination_rect_;
 public:
 	Intro();
 	~Intro();

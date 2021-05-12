@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
 		exit(1);
 	}
 
-	g_window = SDL_CreateWindow("First Window", 100, 100, 1000, 700, 0);
+	g_window = SDL_CreateWindow("First Window", 100, 30, 1200, 800, 0);
 	g_renderer = SDL_CreateRenderer(g_window, -1, 0);
 
 	InitGame();

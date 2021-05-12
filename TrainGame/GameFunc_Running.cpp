@@ -3,18 +3,27 @@
 
 Running::Running()
 {
+	SDL_Surface* background_surface = IMG_Load("../../Resources/background.png");
+	background_texture_ = SDL_CreateTextureFromSurface(g_renderer, background_surface);
+	SDL_FreeSurface(background_surface);
+	background_source_rect_ = { 0, 0 ,2400 ,800 };
+	background_destination_rect_ = { 0, 0, background_source_rect_.w, background_source_rect_.h };
 }
 
 void Running::Update()
 {
+	
+	background_destination_rect_.x -= 10;
+	if (background_destination_rect_.x == -1200)
+		background_destination_rect_.x = 0;
+		
 }
 
 void Running::Render()
 {
-	SDL_SetRenderDrawColor(g_renderer, 255, 0, 255, 255);
-	SDL_RenderClear(g_renderer);
+	SDL_RenderCopy(g_renderer, background_texture_, &background_source_rect_, &background_destination_rect_);
 
-	UserInterface::Show_UI();
+	PhaseInterface::ShowUI();
 
 	SDL_RenderPresent(g_renderer);
 }
@@ -47,4 +56,5 @@ void Running::HandleEvents()
 
 Running::~Running()
 {
+	SDL_DestroyTexture(background_texture_);
 }

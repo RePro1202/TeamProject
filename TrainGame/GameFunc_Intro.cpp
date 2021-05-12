@@ -3,6 +3,11 @@
 
 Intro::Intro()
 {
+	SDL_Surface* intro_surface = IMG_Load("../../Resources/intro.png");
+	intro_texture_ = SDL_CreateTextureFromSurface(g_renderer, intro_surface);
+	SDL_FreeSurface(intro_surface);
+	intro_source_rect_ = { 0, 0 ,1200 ,800 };
+	intro_destination_rect_ = { 0, 0, intro_source_rect_.w, intro_source_rect_.h };
 }
 
 void Intro::Update()
@@ -11,9 +16,7 @@ void Intro::Update()
 
 void Intro::Render()
 {
-	SDL_SetRenderDrawColor(g_renderer, 255, 255, 255, 255);
-	SDL_RenderClear(g_renderer);
-
+	SDL_RenderCopy(g_renderer, intro_texture_, &intro_source_rect_, &intro_destination_rect_);
 
 	SDL_RenderPresent(g_renderer);
 }
@@ -46,4 +49,5 @@ void Intro::HandleEvents()
 
 Intro::~Intro()
 {
+	SDL_DestroyTexture(intro_texture_);
 }
