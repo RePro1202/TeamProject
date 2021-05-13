@@ -20,7 +20,7 @@ Running::Running()
 	train_destination_rect_ = { -1188, 540, train_source_rect_.w, train_source_rect_.h };
 
 	//Speed 초기화
-	speed_ = 10;
+	speed_ = 20;
 	distance_ = 0;
 }
 
@@ -28,8 +28,8 @@ void Running::Update()
 {
 	// speed 자동 감소(최솟값 10, 최댓값 50)
 	speed_ -= 1;
-	if (speed_ < 10)
-		speed_ = 10;
+	if (speed_ < 20)
+		speed_ = 20;
 	else if (speed_ > 50)
 		speed_ = 50;
 
@@ -48,15 +48,21 @@ void Running::Update()
 		background_destination_rect_[1].x = 0;
 	}
 
-	// distance가 5가 되면 platform페이즈로 전환(변수값 초기화)
+	// distance가 5가 되면 배경화면 이동 정지, 열차 이동
 	if (distance_ == 5)
 	{
-		g_current_game_phase = PHASE_PLATFORM;
-
 		background_destination_rect_[0].x = 0;
 		background_destination_rect_[1].x = 0;
-		speed_ = 10;
+		speed_ = 20;
+		train_destination_rect_.x += speed_;
+	}
+
+	//열차가 선로 화면에서 사라지면 platform페이즈로 전환(변수값 초기화)
+	if (train_destination_rect_.x >= 1400)
+	{
 		distance_ = 0;
+		train_destination_rect_.x = -1188;
+		g_current_game_phase = PHASE_PLATFORM;
 	}
 }
 

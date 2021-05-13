@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="GameFunc_Ending.cpp" />
+    <ClCompile Include="GameFunc_Events.cpp" />
     <ClCompile Include="GameFunc_Intro.cpp" />
     <ClCompile Include="GameFunc_Platform.cpp" />
     <ClCompile Include="GameFunc_Running.cpp" />
@@ -152,6 +153,7 @@
   <ItemGroup>
     <ClInclude Include="Core.h" />
     <ClInclude Include="GameFunc_Ending.h" />
+    <ClInclude Include="GameFunc_Events.h" />
     <ClInclude Include="GameFunc_Intro.h" />
     <ClInclude Include="GameFunc_Platform.h" />
     <ClInclude Include="GameFunc_Running.h" />

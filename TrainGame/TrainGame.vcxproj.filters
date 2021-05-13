@@ -33,6 +33,9 @@
     <ClCompile Include="GameFunc_Platform.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="GameFunc_Events.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core.h">
@@ -48,6 +51,9 @@
       <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="GameFunc_Platform.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GameFunc_Events.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>
