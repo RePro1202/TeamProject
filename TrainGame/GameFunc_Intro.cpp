@@ -1,17 +1,9 @@
-#include "Core.h"
 #include "GameFunc_Intro.h"
 
 Intro::Intro()
 {
-	g_button_rect_1.x = 329;
-	g_button_rect_1.y = 406;
-	g_button_rect_1.w = 215;
-	g_button_rect_1.h = 90;
-
-	g_button_rect_2.x = 601;
-	g_button_rect_2.y = 406;
-	g_button_rect_2.w = 215;
-	g_button_rect_2.h = 90;
+	g_button_rect_1 = { 329, 406, 215, 90 };
+	g_button_rect_2 = { 601, 406, 215, 90 };
 
 	SDL_Surface* intro_surface = IMG_Load("../../Resources/Intro.png");
 	intro_texture_ = SDL_CreateTextureFromSurface(g_renderer, intro_surface);

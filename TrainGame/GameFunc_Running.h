@@ -8,10 +8,11 @@ private:
 	SDL_Texture* background_texture_;
 	SDL_Rect background_source_rect_[2];
 	SDL_Rect background_destination_rect_[2];
-
+	SDL_Texture* train_texture_;
+	SDL_Rect train_source_rect_;
+	SDL_Rect train_destination_rect_;
 	int speed_;
 	int distance_;
-
 public:
 	Running();
 	~Running();

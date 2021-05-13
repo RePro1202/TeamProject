@@ -15,14 +15,11 @@ private:
 	SDL_Texture* platform_texture_;
 	SDL_Rect platform_source_rect_;
 	SDL_Rect platform_destination_rect_;
+
 	SDL_Texture* train_texture_;
 	SDL_Rect train_source_rect_;
 	SDL_Rect train_destination_rect_;
-
-	int speed_;
-	int train_state_;
-	int stop_pos_;
-	bool train_out_;
+	int train_state_, train_speed_, stop_destination_, end_destination_, consumption_time_;
 public:
 	Platform();
 	~Platform();
