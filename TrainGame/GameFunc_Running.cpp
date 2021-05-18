@@ -3,30 +3,30 @@
 
 Running::Running()
 {
+	// Background
 	SDL_Surface* background_surface = IMG_Load("../../Resources/Background.png");
 	background_texture_ = SDL_CreateTextureFromSurface(g_renderer, background_surface);
 	SDL_FreeSurface(background_surface);
 	background_source_rect_[0] = { 0, 0 ,2400 ,485 };
 	background_destination_rect_[0] = { 0, 0, background_source_rect_[0].w, background_source_rect_[0].h };
-
 	background_source_rect_[1] = { 0, 485 ,2400 ,318 };
 	background_destination_rect_[1] = { 0, 485, background_source_rect_[1].w, background_source_rect_[1].h };
-
+	// Train
 	SDL_Surface* train_surface = IMG_Load("../../Resources/Train.png");
 	SDL_SetColorKey(train_surface, SDL_TRUE, SDL_MapRGB(train_surface->format, 100, 170, 150));
 	train_texture_ = SDL_CreateTextureFromSurface(g_renderer, train_surface);
 	SDL_FreeSurface(train_surface);
 	train_source_rect_ = { 93, 57 ,1753 ,184 };
-	train_destination_rect_ = { -1188, 540, train_source_rect_.w, train_source_rect_.h };
+	train_destination_rect_ = { -1188, 530, train_source_rect_.w, train_source_rect_.h };
 
-	//Speed 초기화
-	speed_ = 20;
+	g_day = DAY_MORNING;
+	speed_ = 10;
 	distance_ = 0;
 }
 
 void Running::Update()
 {
-	// speed 자동 감소(최솟값 10, 최댓값 50)
+	// speed 자동 감소(최솟값 20, 최댓값 50)
 	speed_ -= 1;
 	if (speed_ < 20)
 		speed_ = 20;
@@ -48,21 +48,20 @@ void Running::Update()
 		background_destination_rect_[1].x = 0;
 	}
 
-	// distance가 5가 되면 배경화면 이동 정지, 열차 이동
 	if (distance_ == 5)
 	{
 		background_destination_rect_[0].x = 0;
 		background_destination_rect_[1].x = 0;
-		speed_ = 20;
-		train_destination_rect_.x += speed_;
-	}
 
-	//열차가 선로 화면에서 사라지면 platform페이즈로 전환(변수값 초기화)
-	if (train_destination_rect_.x >= 1400)
-	{
-		distance_ = 0;
-		train_destination_rect_.x = -1188;
-		g_current_game_phase = PHASE_PLATFORM;
+		train_destination_rect_.x += 40;
+		if (train_destination_rect_.x > BLOCK_X_MAX)
+		{
+			g_current_game_phase = PHASE_PLATFORM;
+			speed_ = 20;
+			distance_ = 0;
+			train_destination_rect_.x = -1188;
+			++g_day;
+		}
 	}
 }
 

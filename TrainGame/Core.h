@@ -9,6 +9,9 @@
 
 using namespace std;
 
+#define BLOCK_X_MAX 1200
+#define BLOCK_Y_MAX 800
+
 void InitGame();
 void ClearGame();
 
@@ -21,8 +24,17 @@ enum Phase
 	PHASE_ENDING
 };
 
+enum Day
+{
+	DAY_MORNING,
+	DAY_DAYTIME,
+	DAY_EVENING,
+	DAY_NIGHT
+};
+
 // 따로 객체를 생성하지 않고 사용해야하므로 전역변수로 설정
 extern int g_current_game_phase;
+extern int g_day;
 extern bool g_flag_running;
 extern SDL_Renderer* g_renderer;
 

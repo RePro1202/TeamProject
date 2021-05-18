@@ -19,7 +19,7 @@ private:
 	SDL_Texture* train_texture_;
 	SDL_Rect train_source_rect_;
 	SDL_Rect train_destination_rect_;
-	int train_state_, train_speed_, stop_destination_, end_destination_, consumption_time_;
+	int train_state_, train_speed_, stop_destination_, consumption_time_;
 public:
 	Platform();
 	~Platform();

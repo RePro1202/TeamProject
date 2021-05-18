@@ -1,4 +1,3 @@
-#include "Core.h"
 #include "GameFunc_Platform.h"
 
 Platform::Platform()
@@ -15,12 +14,11 @@ Platform::Platform()
 	train_texture_ = SDL_CreateTextureFromSurface(g_renderer, train_surface);
 	SDL_FreeSurface(train_surface);
 	train_source_rect_ = { 50, 50 ,1800 ,250 };
-	train_destination_rect_ = { -1600 , 350, train_source_rect_.w, train_source_rect_.h };
+	train_destination_rect_ = { -1600 , 380, train_source_rect_.w, train_source_rect_.h };
 
 	train_state_ = TRAIN_IN;
 	train_speed_ = 0;
 	stop_destination_ = -775;
-	end_destination_ = 1200;
 	consumption_time_ = 3; // 정지까지 필요한 시간
 }
 
@@ -30,7 +28,7 @@ void Platform::Update()
 		train_speed_ = (2 * (stop_destination_ - train_destination_rect_.x)) / (30 * consumption_time_) + 2;
 		if (train_destination_rect_.x > stop_destination_) {
 			train_destination_rect_.x = stop_destination_;
-			train_state_ = 1;
+			train_state_ = TRAIN_STOP;
 		}
 	}
 	else if (train_state_ == TRAIN_STOP)
@@ -39,10 +37,10 @@ void Platform::Update()
 		consumption_time_ = 2; //나갈때 까지 걸리는 시간
 	}
 	else if (train_state_ == TRAIN_OUT) {
-		train_speed_ = 2 * (end_destination_ - stop_destination_) / (30 * consumption_time_) + 2
-			- (2 * (end_destination_ - train_destination_rect_.x)) / (30 * consumption_time_);
+		train_speed_ = 2 * (BLOCK_X_MAX - stop_destination_) / (30 * consumption_time_) + 2
+			- (2 * (BLOCK_X_MAX - train_destination_rect_.x)) / (30 * consumption_time_);
 		// 화면 밖으로 나가면 running페이즈로 전환(변수 초기화)
-		if (train_destination_rect_.x > end_destination_)
+		if (train_destination_rect_.x > BLOCK_X_MAX)
 		{
 			g_current_game_phase = PHASE_RUNNING;
 
@@ -81,8 +79,10 @@ void Platform::HandleEvents()
 		case SDL_KEYDOWN:
 			if (event.key.keysym.sym == SDLK_UP)
 				// 위쪽 방향키를 누르면 기차가 다시 출발
-				if (train_state_ == TRAIN_STOP)
+				if (train_state_ == TRAIN_STOP && g_day != DAY_NIGHT)
 					train_state_ = TRAIN_OUT;
+				else if (g_day == DAY_NIGHT)
+					g_current_game_phase = PHASE_ENDING;
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 

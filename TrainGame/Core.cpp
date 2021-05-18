@@ -14,7 +14,7 @@ PhaseInterface::PhaseInterface()
 	SDL_Surface* temp_surface = IMG_Load("../../Resources/UI.png");
 	texture_ = SDL_CreateTextureFromSurface(g_renderer, temp_surface);
 	SDL_FreeSurface(temp_surface);
-
+	
 	// Time
 	ui_source_rectangle_[0] = { 9, 7, 192, 131 };
 	ui_destination_rectangle_[0] = { 50, 20, 200, 120 };
