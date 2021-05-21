@@ -30,20 +30,23 @@ Running::Running()
 	distance_ = 0;
 	arrow_speed_ = 1.0;
 
-	eve = new Events;
+	eve_ = new Events;
 }
 
 void Running::Update()
 {
+	eve_->runEvent(distance_);	// distance값으로 이벤트 발생조건 검사
+	
+	// 이벤트 처리하는 동안 속도, 속도계 고정
+	if (!eve_->getEventState()) {
+		speed_ -= 1;	// speed 자동 감소(최솟값 20, 최댓값 50)
+		if (speed_ < 20)
+			speed_ = 20;
+		else if (speed_ > 50)
+			speed_ = 50;
 
-	eve->runEvent(distance_);
-
-	// speed 자동 감소(최솟값 20, 최댓값 50)
-	speed_ -= 1;
-	if (speed_ < 20)
-		speed_ = 20;
-	else if (speed_ > 50)
-		speed_ = 50;
+		arrow_destination_rect_.x -= arrow_speed_;
+	}
 
 	// 위쪽 배경
 	background_destination_rect_[0].x -= speed_ / 2;
@@ -60,8 +63,7 @@ void Running::Update()
 		background_destination_rect_[1].x = 0;
 	}
 	// 속도계 화살표
-	arrow_destination_rect_.x -= arrow_speed_;
-
+	
 	if (arrow_destination_rect_.x < 950) {
 		arrow_destination_rect_.x = 950;
 	}
@@ -123,7 +125,7 @@ void Running::Render()
 		g_train_pos_update = false;
 	}
 	PhaseInterface::ShowUI();
-	eve->showEvent();
+	eve_->showEvent();
 
 	// 목표시간 Render
 	if (g_goal_time_update)
@@ -157,7 +159,7 @@ void Running::HandleEvents()
 {
 	SDL_Event event;
 
-	eve->commandHandel();
+	eve_->commandHandel();
 	if (SDL_PollEvent(&event))
 	{
 		switch (event.type)

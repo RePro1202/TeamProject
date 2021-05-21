@@ -18,7 +18,8 @@ private:
 	int speed_;
 	int distance_;
 
-	Events* eve;
+	Events* eve_;
+
 	double arrow_speed_; //화살표 속도에 관해서 팀원분들과 논의 후 변경할 예정이랑 일단 double형으로 뒀습니다..
 public:
 	Running();

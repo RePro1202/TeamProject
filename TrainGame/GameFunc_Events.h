@@ -49,6 +49,7 @@ public:
 	~Events();
 
 	int getPassOrFail();
+	bool getEventState();
 	void eventSet();
 	void runEvent(int dis);
 	void showEvent();

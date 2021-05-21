@@ -107,7 +107,6 @@ void Events::eventSet() {
 	{
 	case COMMAND_NONE:
 		eventState_ = true;
-		//random_ = rand() % 7 + 1;
 		break;
 	case COMMAND_PASS:
 		if (passCount_ == 2) {
@@ -224,6 +223,10 @@ void Events::commandHandel() {
 }
 
 int Events::getPassOrFail() {
-	// fail = 0, pass = 1
+	// fail = 0, pass = 1, none = 2
 	return commandState_;
+}
+
+bool Events::getEventState() {
+	return eventState_;
 }
