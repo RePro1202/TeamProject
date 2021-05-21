@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <stdio.h>
 #include <string>
 #include "SDL.h"
 #include "SDL_ttf.h"
@@ -19,8 +20,8 @@ void ClearGame();
 enum Phase
 {
 	PHASE_INTRO,
-	PHASE_RUNNING,
 	PHASE_PLATFORM,
+	PHASE_RUNNING,
 	PHASE_ENDING
 };
 
@@ -37,18 +38,61 @@ extern int g_current_game_phase;
 extern int g_day;
 extern bool g_flag_running;
 extern SDL_Renderer* g_renderer;
+extern int g_time_hour;
+extern int g_time_min;
+extern int g_time_sec;
+extern bool g_goal_time_update;
+extern bool g_time_update;
+extern bool g_train_pos_update;
 
 class PhaseInterface
 {
 private:
-	SDL_Texture* texture_; // the SDL_Texture 
-	SDL_Rect ui_source_rectangle_[4]; // the rectangle for source image
-	SDL_Rect ui_destination_rectangle_[4]; // for destination
+	// ui 전체 이미지로드 변수
+	SDL_Texture* ui_texture_;
+	SDL_Rect ui_source_rectangle_[5];
+	SDL_Rect ui_destination_rectangle_[5];
+	// Font 관련 변수
+	TTF_Font* UI_font_;
+	SDL_Color darkblue_;
+	// Time 관련 변수
+	SDL_Rect time_rect_;
+	SDL_Texture* time_texture_;
+	const char* time_char_;
+	char buf_[256];
+	int time_speed_;
+	// 목표시간 관련 변수
+	SDL_Rect goal_time_rect_;
+	SDL_Texture* goal_time_texture_;
+	const char* goal_time_char_;
+	int goal_time_hour_;
+	int goal_time_min_;
+	int goal_morning_h_;
+	int goal_daytime_h_;
+	int goal_evening_h_;
+	int goal_morning_m_;
+	int goal_daytime_m_;
+	int goal_evening_m_;
+	int score; // 게임의 스코어
 
 public:
 	PhaseInterface();
 	~PhaseInterface();
+
 	void ShowUI();
+	// Time 관련 함수
+	void SetTimeFont();
+	void TimeUpdate();
+	SDL_Texture* GetTimeTexture() { return time_texture_; };
+	SDL_Rect GetTimeRect() { return time_rect_; };
+	// 도착시간 관련 함수
+	void SetGoalTimeFont();
+	SDL_Texture* GetGoalTimeTexture() { return goal_time_texture_; };
+	SDL_Rect GetGoalTimeRect() { return goal_time_rect_; };
+	// TrainPos 관련 함수
+	void TrainPosUpdate();
+	void DecreaseScore();
+
 	virtual void HandleEvents() = 0;
 	virtual void Update() = 0;
 	virtual void Render() = 0;

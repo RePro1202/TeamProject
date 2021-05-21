@@ -1,5 +1,4 @@
 #include "GameFunc_Running.h"
-#include "GameFunc_Events.h"
 
 Running::Running()
 {
@@ -18,10 +17,18 @@ Running::Running()
 	SDL_FreeSurface(train_surface);
 	train_source_rect_ = { 93, 57 ,1753 ,184 };
 	train_destination_rect_ = { -1188, 530, train_source_rect_.w, train_source_rect_.h };
+	// arrow
+	SDL_Surface* arrow_surface = IMG_Load("../../Resources/UI.png");
+	SDL_SetColorKey(arrow_surface, SDL_TRUE, SDL_MapRGB(arrow_surface->format, 200, 200, 250));
+	arrow_texture_ = SDL_CreateTextureFromSurface(g_renderer, arrow_surface);
+	SDL_FreeSurface(arrow_surface);
+	arrow_source_rect_ = { 687, 63 ,31 ,63 };
+	arrow_destination_rect_ = { 1065, 173, arrow_source_rect_.w, arrow_source_rect_.h };
 
-	g_day = DAY_MORNING;
 	speed_ = 10;
 	distance_ = 0;
+	arrow_speed_ = 1.0;
+
 }
 
 void Running::Update()
@@ -47,7 +54,25 @@ void Running::Update()
 	if (background_destination_rect_[1].x < -1200) {
 		background_destination_rect_[1].x = 0;
 	}
+	// 속도계 화살표
+	arrow_destination_rect_.x -= arrow_speed_;
 
+	if (arrow_destination_rect_.x < 950) {
+		arrow_destination_rect_.x = 950;
+	}
+	if (arrow_destination_rect_.x > 1100) {
+		arrow_destination_rect_.x = 1100;
+	}
+	if (arrow_destination_rect_.x < 1050) {  //속도계 눈금 벗어났을때 감점..조건절 추후 변경예정..
+		PhaseInterface::DecreaseScore();
+	}
+	if (arrow_destination_rect_.x > 1080) {  //조건절 추후 변경예정..
+		PhaseInterface::DecreaseScore();
+	}
+
+	arrow_speed_ = 1.0;
+
+	// 페이즈 전환
 	if (distance_ == 5)
 	{
 		background_destination_rect_[0].x = 0;
@@ -57,12 +82,25 @@ void Running::Update()
 		if (train_destination_rect_.x > BLOCK_X_MAX)
 		{
 			g_current_game_phase = PHASE_PLATFORM;
+			PhaseInterface::TrainPosUpdate();
+
 			speed_ = 20;
 			distance_ = 0;
 			train_destination_rect_.x = -1188;
-			++g_day;
+			arrow_destination_rect_.x = 1065;
+
+
+			g_time_update = true;
+			g_train_pos_update = true;
+			++g_day;// 시간대 변경
+			g_goal_time_update = true;
 		}
 	}
+
+	// Time값 Update
+	PhaseInterface::TimeUpdate();
+	if (g_time_sec % 10 == 0)
+		g_time_update = true;
 }
 
 void Running::Render()
@@ -74,7 +112,37 @@ void Running::Render()
 	// Train
 	SDL_RenderCopy(g_renderer, train_texture_, &train_source_rect_, &train_destination_rect_);
 
+	if (g_train_pos_update == true)
+	{
+		PhaseInterface::TrainPosUpdate();
+		g_train_pos_update = false;
+	}
 	PhaseInterface::ShowUI();
+
+	// 목표시간 Render
+	if (g_goal_time_update)
+	{
+		PhaseInterface::SetGoalTimeFont();
+		g_goal_time_update = false;
+	}
+	SDL_Rect tmp_r = { 145, 23, 110, 60 };
+	SDL_Texture* tmp_texture = PhaseInterface::GetGoalTimeTexture();
+	SDL_Rect tmp_rect = PhaseInterface::GetGoalTimeRect();
+	SDL_RenderCopy(g_renderer, tmp_texture, &tmp_rect, &tmp_r);
+	// Time 최신화
+	if (g_time_update)
+	{
+		PhaseInterface::SetTimeFont();
+		g_time_update = false;
+	}
+	// Time Render
+	SDL_Rect tmp_r2 = { 145, 92, 110, 60 };
+	SDL_Texture* tmp_texture2 = PhaseInterface::GetGoalTimeTexture();
+	SDL_Rect tmp_rect2 = PhaseInterface::GetGoalTimeRect();
+	SDL_RenderCopy(g_renderer, tmp_texture2, &tmp_rect2, &tmp_r2);
+
+	//arrow
+	SDL_RenderCopy(g_renderer, arrow_texture_, &arrow_source_rect_, &arrow_destination_rect_);
 
 	SDL_RenderPresent(g_renderer);
 }
@@ -92,18 +160,16 @@ void Running::HandleEvents()
 
 		case SDL_KEYDOWN:
 			if (event.key.keysym.sym == SDLK_RIGHT)
-				// 오른쪽 키를 누르면 speed값 증가
+			{	// 오른쪽 키를 누르면 speed값 증가
 				speed_ += 5;
+				arrow_speed_ = -3.0;
+			}
 			break;
 
 		case SDL_MOUSEBUTTONDOWN:
 
 			// If the mouse left button is pressed. 
 			if (event.button.button == SDL_BUTTON_LEFT)
-			{
-				g_current_game_phase = PHASE_ENDING;
-			}
-			else if (event.button.button == SDL_BUTTON_RIGHT)
 			{
 				g_current_game_phase = PHASE_ENDING;
 			}
@@ -119,4 +185,6 @@ Running::~Running()
 {
 	SDL_DestroyTexture(background_texture_);
 	SDL_DestroyTexture(train_texture_);
+	SDL_DestroyTexture(arrow_texture_);
+
 }
