@@ -43,15 +43,25 @@ void Platform::Update()
 		if (train_destination_rect_.x > BLOCK_X_MAX)
 		{
 			g_current_game_phase = PHASE_RUNNING;
+			PhaseInterface::TrainPosUpdate();
 
 			train_destination_rect_.x = -1600;
 			train_state_ = TRAIN_IN;
 			train_speed_ = 0;
 			consumption_time_ = 3;
+
+			g_time_update = true;
+			g_train_pos_update = true;
+			g_goal_time_update = true;
 		}
 	}
 
 	train_destination_rect_.x += train_speed_;
+
+	// Time값 Update
+	PhaseInterface::TimeUpdate();
+	if (g_time_sec % 10 == 0)
+		g_time_update = true;
 }
 
 void Platform::Render()
@@ -61,8 +71,35 @@ void Platform::Render()
 	SDL_RenderCopy(g_renderer, train_texture_, &train_source_rect_, &train_destination_rect_);
 	SDL_RenderCopy(g_renderer, platform_texture_, &platform_source_rect_, &platform_destination_rect_);
 
+	if (g_train_pos_update == true)
+	{
+		PhaseInterface::TrainPosUpdate();
+		g_train_pos_update = false;
+	}
 	PhaseInterface::ShowUI();
 
+	// 목표시간 Render
+	if (g_goal_time_update)
+	{
+		PhaseInterface::SetGoalTimeFont();
+		g_goal_time_update = false;
+	}
+	SDL_Rect tmp_r = { 145, 23, 110, 60 };
+	SDL_Texture* tmp_texture = PhaseInterface::GetGoalTimeTexture();
+	SDL_Rect tmp_rect = PhaseInterface::GetGoalTimeRect();
+	SDL_RenderCopy(g_renderer, tmp_texture, &tmp_rect, &tmp_r);
+
+	// Time 최신화
+	if (g_time_update)
+	{
+		PhaseInterface::SetTimeFont();
+		g_time_update = false;
+	}
+	// Time Render
+	SDL_Rect tmp_r2 = { 145, 92, 110, 60 };
+	SDL_Texture* tmp_texture2 = PhaseInterface::GetGoalTimeTexture();
+	SDL_Rect tmp_rect2 = PhaseInterface::GetGoalTimeRect();
+	SDL_RenderCopy(g_renderer, tmp_texture2, &tmp_rect2, &tmp_r2);
 	SDL_RenderPresent(g_renderer);
 }
 
@@ -81,6 +118,7 @@ void Platform::HandleEvents()
 				// 위쪽 방향키를 누르면 기차가 다시 출발
 				if (train_state_ == TRAIN_STOP && g_day != DAY_NIGHT)
 					train_state_ = TRAIN_OUT;
+			// 밤에 플랫폼에 도착하고/ UP키를 누르면 엔딩
 				else if (g_day == DAY_NIGHT)
 					g_current_game_phase = PHASE_ENDING;
 			break;

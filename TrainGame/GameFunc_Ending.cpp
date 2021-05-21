@@ -1,4 +1,3 @@
-#include "Core.h"
 #include "GameFunc_Ending.h"
 
 Ending::Ending()

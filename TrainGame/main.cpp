@@ -15,7 +15,14 @@ Uint32 g_last_time_ms;
 
 // 페이즈 전환변수
 int g_current_game_phase;
+
 int g_day;
+int g_time_hour;
+int g_time_min;
+int g_time_sec;
+bool g_goal_time_update;
+bool g_time_update;
+bool g_train_pos_update;
 
 int main(int argc, char* argv[])
 {
@@ -37,8 +44,8 @@ int main(int argc, char* argv[])
 	game_phase[PHASE_PLATFORM] = new Platform;
 	game_phase[PHASE_ENDING] = new Ending;
 
-	g_current_game_phase = PHASE_INTRO;
-	g_day = DAY_MORNING;
+	//g_current_game_phase = PHASE_INTRO;
+	//g_day = DAY_MORNING;
 
 	g_last_time_ms = SDL_GetTicks();
 

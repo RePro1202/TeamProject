@@ -12,10 +12,14 @@ private:
 	SDL_Texture* train_texture_;
 	SDL_Rect train_source_rect_;
 	SDL_Rect train_destination_rect_;
+	SDL_Texture* arrow_texture_;
+	SDL_Rect arrow_source_rect_;
+	SDL_Rect arrow_destination_rect_;
 	int speed_;
 	int distance_;
 
 	Events* eve;
+	double arrow_speed_; //화살표 속도에 관해서 팀원분들과 논의 후 변경할 예정이랑 일단 double형으로 뒀습니다..
 public:
 	Running();
 	~Running();
