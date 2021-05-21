@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core.h"
+#include "GameFunc_Events.h"
 
 class Running : public PhaseInterface
 {
@@ -13,6 +14,8 @@ private:
 	SDL_Rect train_destination_rect_;
 	int speed_;
 	int distance_;
+
+	Events* eve;
 public:
 	Running();
 	~Running();

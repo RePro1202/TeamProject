@@ -1,5 +1,5 @@
 #include "GameFunc_Running.h"
-#include "GameFunc_Events.h"
+
 
 Running::Running()
 {
@@ -22,10 +22,15 @@ Running::Running()
 	g_day = DAY_MORNING;
 	speed_ = 10;
 	distance_ = 0;
+
+	eve = new Events;
 }
 
 void Running::Update()
 {
+
+	eve->runEvent(distance_);
+
 	// speed 자동 감소(최솟값 20, 최댓값 50)
 	speed_ -= 1;
 	if (speed_ < 20)
@@ -75,13 +80,17 @@ void Running::Render()
 	SDL_RenderCopy(g_renderer, train_texture_, &train_source_rect_, &train_destination_rect_);
 
 	PhaseInterface::ShowUI();
+	eve->showEvent();
 
 	SDL_RenderPresent(g_renderer);
 }
 
 void Running::HandleEvents()
 {
+
 	SDL_Event event;
+
+	eve->commandHandel();
 	if (SDL_PollEvent(&event))
 	{
 		switch (event.type)

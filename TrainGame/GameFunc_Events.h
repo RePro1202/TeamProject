@@ -14,19 +14,44 @@ enum EventsName
 	EVENT_DRUNK
 };
 
+enum CommandCond
+{
+	COMMAND_FAIL, COMMAND_PASS, COMMAND_NONE
+};
+
 class Events
 {
 private:
 	SDL_Texture* events_texture_;
 	SDL_Rect events_source_rect_[8];
 	SDL_Rect events_destination_rect_[8];
+
+	SDL_Texture* command_texture_;
+	SDL_Texture* command_texture_green_;
+	SDL_Rect command_source_rect_[4];
+	SDL_Rect command_destination_rect_[5];
+	
+	SDL_Texture* output_texture_[2];
+	SDL_Rect output_rect_;
+	TTF_Font* output_font_;
+	SDL_Color black_;
+
+	int distance_;
+	bool eventState_;
+	int commandState_;
+	int command_[5];
+	int trueCommand_[5];
+	int commandCount_;
+	int random_;
+	int passCount_;
 public:
 	Events();
 	~Events();
 
-	Events getEvent(int num);
-
-	SDL_Texture* getEventTexture();
-	SDL_Rect getEventSource(int num);
-	SDL_Rect getEventDestination(int num);
+	int getPassOrFail();
+	void eventSet();
+	void runEvent(int dis);
+	void showEvent();
+	void commandHandel();
+	void compareCommand();
 };
