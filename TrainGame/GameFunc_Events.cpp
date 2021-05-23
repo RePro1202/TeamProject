@@ -82,9 +82,9 @@ Events::~Events()
 void Events::runEvent(int dis) {
 	distance_ = dis;
 
-	if (distance_ >= 2 && distance_ < 4) {
+	if (distance_ >= 2 && distance_ < 5) {
 		eventSet();
-		if (distance_ >= 3) {
+		if (distance_ >= 4) {
 			commandState_ = COMMAND_FAIL;
 		}
 	}
