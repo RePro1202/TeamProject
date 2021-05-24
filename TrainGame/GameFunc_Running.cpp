@@ -26,7 +26,7 @@ Running::Running()
 	arrow_source_rect_ = { 697, 76 ,12 ,35 };
 	arrow_destination_rect_ = { 1080, 186, arrow_source_rect_.w, arrow_source_rect_.h };
 
-	train_speed_ = 50;
+	train_speed_ = 40;
 	train_distance_ = 0;
 	arrow_speed_ = 1.2;
 
@@ -40,10 +40,10 @@ void Running::Update()
 	// 이벤트 처리하는 동안 속도, 속도계 고정
 	if (!eve_->getEventState()) {
 		train_speed_ -= 1;	// speed 자동 감소(최솟값 20, 최댓값 50)
-		if (train_speed_ < 5)
-			train_speed_ = 5;
-		else if (train_speed_ > 60)
-			train_speed_ = 60;
+		if (train_speed_ < 10)
+			train_speed_ = 10;
+		else if (train_speed_ > 50)
+			train_speed_ = 50;
 
 		arrow_destination_rect_.x -= arrow_speed_;
 	}
@@ -74,7 +74,7 @@ void Running::Update()
 		PhaseInterface::DecreaseScore();
 	}
 
-	arrow_speed_ = 1.2;
+	arrow_speed_ = 1.3;
 
 	// 페이즈 전환
 	if (train_distance_ == 8)
