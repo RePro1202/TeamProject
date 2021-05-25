@@ -2,6 +2,7 @@
 
 #include "Core.h"
 #include "GameFunc_Events.h"
+#include "time.h"
 
 class Running : public PhaseInterface
 {

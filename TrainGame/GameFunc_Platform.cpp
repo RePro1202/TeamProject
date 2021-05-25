@@ -1,4 +1,6 @@
 #include "GameFunc_Platform.h"
+#include <cstdlib>
+#include <ctime>
 
 Platform::Platform()
 {
