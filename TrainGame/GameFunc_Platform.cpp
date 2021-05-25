@@ -298,6 +298,16 @@ void Platform::Render()
 	}
 
 	SDL_RenderCopy(g_renderer, platform_texture_, &platform_source_rect_, &platform_destination_rect_);
+	for (int i = 0; i < 10; i++) {
+		door_destination_rect_.x = door_stop_destination_[i][0];
+		door_destination_rect_.y = door_stop_destination_[i][1];
+		if (i % 2 == 0) {
+			SDL_RenderCopy(g_renderer, door_texture_, &door_source_rect_left_, &door_destination_rect_);
+		}
+		else {
+			SDL_RenderCopy(g_renderer, door_texture_, &door_source_rect_right_, &door_destination_rect_);
+		}
+	}
 
 	for (int i = 0; i < 30; i++) {
 		if (people_destination_Array_[i][0] == 1 || people_destination_Array_[i][0] == 4) {

@@ -41,7 +41,7 @@ Running::Running()
 	arrow_source_rect_ = { 697, 76 ,12 ,35 };
 	arrow_destination_rect_ = { 1080, 186, arrow_source_rect_.w, arrow_source_rect_.h };
 
-	train_speed_ = 40;
+	train_speed_ = 60;
 	train_distance_ = 0;
 	arrow_speed_ = 1.3;
 
@@ -62,7 +62,7 @@ void Running::Update()
 			train_speed_ = 60;
 
 		arrow_destination_rect_.x -= arrow_speed_;
-		if (arrow_destination_rect_.x > 1096) //속도계상에서의 열차 속도 제한
+		if (arrow_destination_rect_.x > 1064) //속도계상에서의 열차 속도 제한
 			train_speed_ = 60; 
 	}
 
@@ -97,7 +97,7 @@ void Running::Update()
 
 
 	// 페이즈 전환
-	if (train_distance_ == 8)
+	if (train_distance_ == 10)
 	{
 		background_destination_rect_[g_day].x = 0;
 		track_destination_rect_.x = 0;
@@ -109,7 +109,7 @@ void Running::Update()
 			//PhaseInterface::TrainPosUpdate();
 			PhaseInterface::EndFade();
 
-			train_speed_ = 50;
+			train_speed_ = 60;
 			train_distance_ = 0;
 			train_destination_rect_.x = -1188;
 			arrow_destination_rect_.x = 1080;
@@ -178,7 +178,7 @@ void Running::Render()
 	else if (train_distance_ == 2) {
 		PhaseInterface::EndFade();
 	}
-	else if (train_distance_ == 8) {
+	else if (train_distance_ == 10) {
 		PhaseInterface::FadeOut(5);
 	}
 
