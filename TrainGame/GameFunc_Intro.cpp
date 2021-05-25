@@ -33,6 +33,8 @@ void Intro::Render()
 	tmp_r = { 320, 150, intro_title_rect_.w, intro_title_rect_.h };
 	SDL_RenderCopy(g_renderer, intro_title_texture_, &intro_title_rect_, &tmp_r);
 
+	PhaseInterface::FadeIn();
+
 	SDL_RenderPresent(g_renderer);
 }
 
@@ -58,8 +60,12 @@ void Intro::HandleEvents()
 				if (mouse_x > g_button_rect_1.x &&
 					mouse_y > g_button_rect_1.y &&
 					mouse_x < g_button_rect_1.x + g_button_rect_1.w &&
-					mouse_y < g_button_rect_1.y + g_button_rect_1.h)
+					mouse_y < g_button_rect_1.y + g_button_rect_1.h) {
+
+					PhaseInterface::EndFade();
 					g_current_game_phase = PHASE_PLATFORM;
+				}
+					
 
 				// 게임종료 버튼
 				else if (mouse_x > g_button_rect_2.x &&

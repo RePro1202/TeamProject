@@ -75,6 +75,12 @@ private:
 	int goal_evening_m_;
 	int score; // 게임의 스코어
 
+
+	SDL_Texture* black_texture_;
+	SDL_Rect black_source_rect_;
+	SDL_Rect black_destination_rect_;
+	int alpha_;
+
 public:
 	PhaseInterface();
 	~PhaseInterface();
@@ -92,6 +98,11 @@ public:
 	// TrainPos 관련 함수
 	void TrainPosUpdate();
 	void DecreaseScore();
+
+	//페이드 인, 아웃
+	void FadeIn();
+	void FadeOut(int);
+	void EndFade();
 
 	virtual void HandleEvents() = 0;
 	virtual void Update() = 0;

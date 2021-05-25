@@ -90,6 +90,7 @@ void Running::Update()
 		{
 			g_current_game_phase = PHASE_PLATFORM;
 			PhaseInterface::TrainPosUpdate();
+			PhaseInterface::EndFade();
 
 			speed_ = 20;
 			distance_ = 0;
@@ -151,6 +152,17 @@ void Running::Render()
 
 	//arrow
 	SDL_RenderCopy(g_renderer, arrow_texture_, &arrow_source_rect_, &arrow_destination_rect_);
+
+	// Fade in and out
+	if (distance_ == 0) {
+		PhaseInterface::FadeIn();
+	}
+	else if (distance_ == 1) {
+		PhaseInterface::EndFade();
+	}
+	else if (distance_ == 5) {
+		PhaseInterface::FadeOut(5);
+	}
 
 	SDL_RenderPresent(g_renderer);
 }

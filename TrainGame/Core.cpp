@@ -79,6 +79,13 @@ PhaseInterface::PhaseInterface()
 	ui_destination_rectangle_[4] = { 372, 67, 40, 20 };
 	score = 0;
 
+	//페이드
+	SDL_Surface* black_surface = IMG_Load("../../Resources/black.png");
+	black_texture_ = SDL_CreateTextureFromSurface(g_renderer, black_surface);
+	SDL_FreeSurface(black_surface);
+	black_source_rect_ = { 0, 0 ,1200 ,800 };
+	black_destination_rect_ = { 0, 0, black_source_rect_.w, black_source_rect_.h };
+	alpha_ = 0;
 }
 
 PhaseInterface::~PhaseInterface()
@@ -86,6 +93,7 @@ PhaseInterface::~PhaseInterface()
 	TTF_CloseFont(UI_font_);
 	SDL_DestroyTexture(ui_texture_);
 	SDL_DestroyTexture(time_texture_);
+	SDL_DestroyTexture(black_texture_);
 }
 
 void PhaseInterface::ShowUI()
@@ -97,49 +105,49 @@ void PhaseInterface::ShowUI()
 
 void PhaseInterface::SetGoalTimeFont()
 {
-	// 목표시간 조정
-	switch (g_day)
+// 목표시간 조정
+switch (g_day)
+{
+case DAY_MORNING:
+	goal_time_hour_ = goal_morning_h_;
+	goal_time_min_ = goal_morning_m_;
+	break;
+case DAY_DAYTIME:
+	if (g_current_game_phase == PHASE_PLATFORM)
 	{
-	case DAY_MORNING:
 		goal_time_hour_ = goal_morning_h_;
 		goal_time_min_ = goal_morning_m_;
-		break;
-	case DAY_DAYTIME:
-		if (g_current_game_phase == PHASE_PLATFORM)
-		{
-			goal_time_hour_ = goal_morning_h_;
-			goal_time_min_ = goal_morning_m_;
-		}
-		else
-		{
-			goal_time_hour_ = goal_daytime_h_;
-			goal_time_min_ = goal_daytime_m_;
-		}
-		break;
-	case DAY_EVENING:
-		if (g_current_game_phase == PHASE_PLATFORM)
-		{
-			goal_time_hour_ = goal_daytime_h_;
-			goal_time_min_ = goal_daytime_m_;
-		}
-		else
-		{
-			goal_time_hour_ = goal_evening_h_;
-			goal_time_min_ = goal_evening_m_;
-		}
-		break;
-	case DAY_NIGHT:
+	}
+	else
+	{
+		goal_time_hour_ = goal_daytime_h_;
+		goal_time_min_ = goal_daytime_m_;
+	}
+	break;
+case DAY_EVENING:
+	if (g_current_game_phase == PHASE_PLATFORM)
+	{
+		goal_time_hour_ = goal_daytime_h_;
+		goal_time_min_ = goal_daytime_m_;
+	}
+	else
+	{
 		goal_time_hour_ = goal_evening_h_;
 		goal_time_min_ = goal_evening_m_;
-		break;
 	}
-	SDL_DestroyTexture(goal_time_texture_);
-	sprintf_s(buf_, "%02d:%02d", goal_time_hour_, goal_time_min_);
-	goal_time_char_ = buf_;
-	SDL_Surface* tmp_surface = TTF_RenderText_Blended(UI_font_, goal_time_char_, darkblue_);
-	goal_time_rect_ = { 0, 0, tmp_surface->w, tmp_surface->h };
-	goal_time_texture_ = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
-	SDL_FreeSurface(tmp_surface);
+	break;
+case DAY_NIGHT:
+	goal_time_hour_ = goal_evening_h_;
+	goal_time_min_ = goal_evening_m_;
+	break;
+}
+SDL_DestroyTexture(goal_time_texture_);
+sprintf_s(buf_, "%02d:%02d", goal_time_hour_, goal_time_min_);
+goal_time_char_ = buf_;
+SDL_Surface* tmp_surface = TTF_RenderText_Blended(UI_font_, goal_time_char_, darkblue_);
+goal_time_rect_ = { 0, 0, tmp_surface->w, tmp_surface->h };
+goal_time_texture_ = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
+SDL_FreeSurface(tmp_surface);
 }
 
 void PhaseInterface::SetTimeFont()
@@ -175,4 +183,31 @@ void PhaseInterface::TrainPosUpdate()
 void PhaseInterface::DecreaseScore()
 {
 	score -= 10;
+}
+
+// FadeIn(), FadeOut() --> 렌더에서 호출
+// EndFade() --> 알파값 초기화, 페이드 종료 시점에서 호출해야함
+void PhaseInterface::FadeIn() {
+
+	SDL_SetTextureAlphaMod(black_texture_, 255 - alpha_);
+	SDL_RenderCopy(g_renderer, black_texture_, &black_source_rect_, &black_destination_rect_);
+
+	if (alpha_ < 255) {
+		alpha_ += 5;
+	}
+}
+
+void PhaseInterface::FadeOut(int i) {
+
+	int a = i;
+	SDL_SetTextureAlphaMod(black_texture_, alpha_);
+	SDL_RenderCopy(g_renderer, black_texture_, &black_source_rect_, &black_destination_rect_);
+
+	if (alpha_ < 255) {
+		alpha_ += a;
+	}
+}
+
+void PhaseInterface::EndFade() {
+	alpha_ = 0;
 }

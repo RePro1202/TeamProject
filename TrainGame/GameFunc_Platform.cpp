@@ -35,6 +35,7 @@ void Platform::Update()
 	{
 		train_speed_ = 0;
 		consumption_time_ = 2; //나갈때 까지 걸리는 시간
+		PhaseInterface::EndFade();
 	}
 	else if (train_state_ == TRAIN_OUT) {
 		train_speed_ = 2 * (BLOCK_X_MAX - stop_destination_) / (30 * consumption_time_) + 2
@@ -44,6 +45,7 @@ void Platform::Update()
 		{
 			g_current_game_phase = PHASE_RUNNING;
 			PhaseInterface::TrainPosUpdate();
+			PhaseInterface::EndFade();
 
 			train_destination_rect_.x = -1600;
 			train_state_ = TRAIN_IN;
@@ -100,6 +102,14 @@ void Platform::Render()
 	SDL_Texture* tmp_texture2 = PhaseInterface::GetGoalTimeTexture();
 	SDL_Rect tmp_rect2 = PhaseInterface::GetGoalTimeRect();
 	SDL_RenderCopy(g_renderer, tmp_texture2, &tmp_rect2, &tmp_r2);
+
+	if (train_state_ == TRAIN_IN) {
+		PhaseInterface::FadeIn();
+	}
+	if (train_state_ == TRAIN_OUT) {
+		PhaseInterface::FadeOut(3);
+	}
+
 	SDL_RenderPresent(g_renderer);
 }
 

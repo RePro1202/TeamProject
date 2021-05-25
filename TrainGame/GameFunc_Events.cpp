@@ -9,19 +9,22 @@ Events::Events()
 	SDL_FreeSurface(event_surface);
 
 	SDL_Surface* command_surface = IMG_Load("../../Resources/wasd.png");
+	SDL_SetColorKey(command_surface, SDL_TRUE, SDL_MapRGB(command_surface->format, 255, 255, 255));
 	command_texture_ = SDL_CreateTextureFromSurface(g_renderer, command_surface);
 	command_texture_green_ = SDL_CreateTextureFromSurface(g_renderer, command_surface);	// 올바른 커맨드 입력(초록)
 	SDL_SetTextureColorMod(command_texture_green_, 0, 255, 0);
 	SDL_FreeSurface(command_surface);
 
 	// 성공 실패 메세지 폰트
-	output_font_ = TTF_OpenFont("../../Resources/ALBAS___.ttf", 80);
+	output_font_ = TTF_OpenFont("../../Resources/Robotomono.ttf", 80);
 	black_ = { 0,0,0,0 };
 
 	SDL_Surface* tmp_surface = TTF_RenderText_Blended(output_font_, "Success!", black_);
 	output_texture_[0] = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
 	SDL_Surface* tmp_surface2 = TTF_RenderText_Blended(output_font_, "Fail", black_);
 	output_texture_[1] = SDL_CreateTextureFromSurface(g_renderer, tmp_surface2);
+	SDL_Surface* tmp_surface3 = TTF_RenderText_Blended(output_font_, "Time out", black_);
+	output_texture_[2] = SDL_CreateTextureFromSurface(g_renderer, tmp_surface3);
 
 	output_rect_ = { 0, 0, tmp_surface->w, tmp_surface->h };
 	SDL_FreeSurface(tmp_surface);
@@ -45,15 +48,15 @@ Events::Events()
 	}
 
 	// 커맨드 소스
-	command_source_rect_[0] = { 15, 15, 170 - 10 , 145 };
-	command_source_rect_[1] = { 200, 15, 300 - 200, 145 };
-	command_source_rect_[2] = { 340, 15, 440 - 340 , 145 };
-	command_source_rect_[3] = { 470, 15, 590 - 470, 145 };
-	
+	command_source_rect_[0] = { 0, 0, 270, 270 };
+	command_source_rect_[1] = { 0, 270, 270, 270 };
+	command_source_rect_[2] = { 270, 270, 270, 270 };
+	command_source_rect_[3] = { 270, 0, 270, 270 };
+
 	// 커맨드 위치
 	int x = 600;
 	for (int i = 0; i < 5; i++) {
-		command_destination_rect_[i] = { x, 300, 100, 80 };
+		command_destination_rect_[i] = { x, 300, 100, 100 };
 		x += 100;
 	}
 	
@@ -68,6 +71,8 @@ Events::Events()
 		command_[i] = 0;
 		trueCommand_[i] = rand() % 4;	// 정답 커맨드 랜덤 생성
 	}
+
+	time_out_ = 0;
 }
 
 Events::~Events()
@@ -82,9 +87,9 @@ Events::~Events()
 void Events::runEvent(int dis) {
 	distance_ = dis;
 
-	if (distance_ >= 2 && distance_ < 4) {
+	if (distance_ >= 2 && distance_ < 5) {
 		eventSet();
-		if (distance_ >= 3) {
+		if (distance_ >= 4) {
 			commandState_ = COMMAND_FAIL;
 		}
 	}
@@ -110,10 +115,18 @@ void Events::eventSet() {
 		break;
 	case COMMAND_PASS:
 		if (passCount_ == 2) {
+			// ----> 점수 추가
 			eventState_ = false;
 		} break;
 	case COMMAND_FAIL:
+		// ------> 점수 감점
 		eventState_ = false;
+		if (distance_ < 4) {
+			time_out_ = 1;
+		}
+		else {
+			time_out_ = 0;
+		}
 		break;
 	default:
 		eventState_ = false;
@@ -137,14 +150,17 @@ void Events::showEvent() {
 			}
 		}
 	}
+
+	SDL_Rect tmp_r;
+	tmp_r = { 400, 200, output_rect_.w, output_rect_.h };
+
 	if (passCount_ == 2) {
-		SDL_Rect tmp_r;
-		tmp_r = { 400, 200, output_rect_.w, output_rect_.h };
 		SDL_RenderCopy(g_renderer, output_texture_[0], &output_rect_, &tmp_r);
 	}
-	else if (commandState_ == COMMAND_FAIL) {
-		SDL_Rect tmp_r;
-		tmp_r = { 400, 200, output_rect_.w, output_rect_.h };
+	else if (commandState_ == COMMAND_FAIL && !time_out_) {
+		SDL_RenderCopy(g_renderer, output_texture_[2], &output_rect_, &tmp_r);	
+	}
+	else if (time_out_) {
 		SDL_RenderCopy(g_renderer, output_texture_[1], &output_rect_, &tmp_r);
 	}
 }

@@ -31,7 +31,7 @@ private:
 	SDL_Rect command_source_rect_[4];
 	SDL_Rect command_destination_rect_[5];
 	
-	SDL_Texture* output_texture_[2];
+	SDL_Texture* output_texture_[3];
 	SDL_Rect output_rect_;
 	TTF_Font* output_font_;
 	SDL_Color black_;
@@ -44,6 +44,7 @@ private:
 	int commandCount_;
 	int random_;
 	int passCount_;
+	bool time_out_;
 public:
 	Events();
 	~Events();
