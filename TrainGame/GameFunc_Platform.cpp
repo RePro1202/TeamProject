@@ -247,7 +247,7 @@ void Platform::Update()
 			door_count_ = 87; // 정지상태
 			train2_count_ = 4;
 		}
-		//PhaseInterface::EndFade();
+		PhaseInterface::EndFade();
 	}
 	else if (train_state_ == TRAIN_OUT && g_day != DAY_NIGHT) {
 		train_speed_ = 2 * (BLOCK_X_MAX - stop_destination_) / (30 * consumption_time_) + 2

@@ -172,13 +172,13 @@ void Running::Render()
 	SDL_RenderCopy(g_renderer, arrow_texture_, &arrow_source_rect_, &arrow_destination_rect_);
 
 	// Fade in and out
-	if (distance_ == 0) {
+	if (train_distance_ == 0) {
 		PhaseInterface::FadeIn();
 	}
-	else if (distance_ == 1) {
+	else if (train_distance_ == 2) {
 		PhaseInterface::EndFade();
 	}
-	else if (distance_ == 5) {
+	else if (train_distance_ == 8) {
 		PhaseInterface::FadeOut(5);
 	}
 
