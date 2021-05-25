@@ -41,9 +41,12 @@ extern SDL_Renderer* g_renderer;
 extern int g_time_hour;
 extern int g_time_min;
 extern int g_time_sec;
+extern int g_train_pos;
+
 extern bool g_goal_time_update;
 extern bool g_time_update;
 extern bool g_train_pos_update;
+
 
 class PhaseInterface
 {

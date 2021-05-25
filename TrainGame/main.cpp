@@ -20,6 +20,7 @@ int g_day;
 int g_time_hour;
 int g_time_min;
 int g_time_sec;
+int g_train_pos;
 bool g_goal_time_update;
 bool g_time_update;
 bool g_train_pos_update;

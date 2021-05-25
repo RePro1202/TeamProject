@@ -7,6 +7,7 @@ void InitGame() {
 	g_time_hour = 0;
 	g_time_min = 0;
 	g_time_sec = 0;
+	g_train_pos = 372;
 	g_goal_time_update = false;
 	g_time_update = false;
 	g_train_pos_update = false;
@@ -176,7 +177,8 @@ void PhaseInterface::TimeUpdate()
 
 void PhaseInterface::TrainPosUpdate()
 {
-	ui_destination_rectangle_[4].x += 68;
+	g_train_pos += 68;
+	ui_destination_rectangle_[4].x = g_train_pos;
 }
 
 
