@@ -55,50 +55,7 @@ Platform::Platform()
 	sign_destination_rect_ = { 600 ,250,100,100 };
 
 	score_count_ = 0;
-	/*
-	people_count = 10;// 출현 할 사람수
-	random_count_ = 30; // 배열로 지정된 사람 최대수
-	random2_count_ = people_count;
-	door_count_ = 42; // 문이 움직일 변수
-	train2_count_ = 4;
-	for (int i = 0; i < 5; i++)
-	{
-		door_stop_destination_[i * 2][0] = 83 + i * 168;   // 왼쪽 문 위치
-		door_stop_destination_[i * 2][1] = 438;
-		door_stop_destination_[i * 2 + 1][0] = 125 + i * 168; // 오른쪽 문 위치
-		door_stop_destination_[i * 2 + 1][1] = 438;
-	}
-	srand((unsigned int)time(NULL)); // 랜덤
-	for (int i = 0; i < 5; i++)
-	{
-		people_stop_destination_[i] = 0; // 해당 문의 차례
-	}
-	for (int i = 0; i < 6; i++)
-	{
-		for (int k = 0; k < 5; k++)
-		{
-			if (rand() % random_count_ <= random2_count_ && random2_count_ != 0)  // 조건문 만족시 5 * 6 중 해당 k 행 i 열에 임의의 범위에 사람 소환
-			{
-				random2_count_--;
-				people_destination_Array_[i * 5 + k][0] = 1; // 1 이상일때 행동 중 // 1은 움직이기 전 상태
-				people_destination_Array_[i * 5 + k][1] = 20 + rand() % 170 + 170 * k; // 랜덤 좌표
-				people_destination_Array_[i * 5 + k][2] = 500 + (rand() % 20) + 20 * i; //렌덤 좌표
-				people_destination_Array_[i * 5 + k][3] = ((int)(people_destination_Array_[i * 5 + k][1] - 20) / 170);
-				people_destination_Array_[i * 5 + k][4] = people_stop_destination_[people_destination_Array_[i * 5 + k][3]]; // 자신과 가까운 문의 차레를 받음
-				people_stop_destination_[people_destination_Array_[i * 5 + k][3]] += 1;  // 자신과 가까운 문의 차례 + 1
-				//ctime과 cstdilb헤더파일을 사용했으니 정리 바람...[0 상태1:x좌표 2:y좌표 3: 문 번호 4: 차례]
-			}
-			else {
-				people_destination_Array_[i * 5 + k][0] = 0; //조건문 만족 못한 사람은 작동안하도록
-			}
-			random_count_--;
-		}
-	}
-	train_state_ = TRAIN_IN;
-	train_speed_ = 0;
-	stop_destination_ = -775;
-	consumption_time_ = 3; // 정지까지 필요한 시간
-	*/
+	
 }
 
 void Platform::Update()
@@ -428,15 +385,6 @@ void Platform::HandleEvents()
 				}
 			}
 			break;
-		case SDL_MOUSEBUTTONDOWN:
-
-			// If the mouse left button is pressed. 
-			if (event.button.button == SDL_BUTTON_LEFT)
-			{
-				g_current_game_phase = PHASE_RUNNING;
-			}
-			break;
-
 		default:
 			break;
 		}

@@ -251,7 +251,6 @@ void Running::HandleEvents()
 		case SDL_QUIT:
 			g_flag_running = false;
 			break;
-
 		case SDL_KEYDOWN:
 			if (event.key.keysym.sym == SDLK_RIGHT)
 			{	// 오른쪽 키를 누르면 speed값 증가
@@ -264,16 +263,6 @@ void Running::HandleEvents()
 				RightKey = false;
 				eve_->SetRightKey(false);
 			}
-
-		case SDL_MOUSEBUTTONDOWN:
-
-			// If the mouse left button is pressed. 
-			if (event.button.button == SDL_BUTTON_LEFT)
-			{
-				g_current_game_phase = PHASE_ENDING;
-			}
-			break;
-
 		default:
 			break;
 		}

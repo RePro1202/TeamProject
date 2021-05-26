@@ -225,7 +225,7 @@ void Events::commandHandel() {
 			if (event.key.keysym.sym == SDLK_RIGHT) {
 				right_key_ = false;
 			}
-
+		/*
 		case SDL_MOUSEBUTTONDOWN:
 
 			// If the mouse left button is pressed. 
@@ -238,7 +238,7 @@ void Events::commandHandel() {
 				g_current_game_phase = PHASE_ENDING;
 			}
 			break;
-
+		*/
 		default:
 			break;
 		}
