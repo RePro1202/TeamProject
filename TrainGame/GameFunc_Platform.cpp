@@ -106,13 +106,13 @@ void Platform::Update()
 	// 목표시간 안에 도착하면 스코어증가
 	if (PhaseInterface::GoalSuccess() == 1 && g_day != DAY_MORNING && score_count_ == 0)
 	{
-		PhaseInterface::IncreaseScore(1000);
+		PhaseInterface::IncreaseScore(800);
 		g_score_update = true;
 		score_count_++;
 	}
 	else if (PhaseInterface::GoalSuccess() == 0 && g_day != DAY_MORNING && score_count_ == 0)
 	{
-		PhaseInterface::DecreaseScore(1000);
+		PhaseInterface::DecreaseScore(500);
 		g_score_update = true;
 		score_count_++;
 	}

@@ -24,11 +24,11 @@ PhaseInterface::PhaseInterface()
 	// 시간 빠르기
 	time_speed_ = 10;
 	// 목표시간
-	goal_morning_h_ = 3;
+	goal_morning_h_ = 1;
 	goal_morning_m_ = 30;
-	goal_daytime_h_ = 6;
+	goal_daytime_h_ = 3;
 	goal_daytime_m_ = 00;
-	goal_evening_h_ = 8;
+	goal_evening_h_ = 4;
 	goal_evening_m_ = 30;
 	// 시작 시간 조정
 	g_time_hour = 0;

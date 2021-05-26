@@ -41,7 +41,7 @@ Running::Running()
 	arrow_source_rect_ = { 697, 76 ,12 ,35 };
 	arrow_destination_rect_ = { 1080, 186, arrow_source_rect_.w, arrow_source_rect_.h };
 
-	train_speed_ = 60;
+	train_speed_ = 54;
 	train_distance_ = 0;
 	arrow_speed_ = 1.3;
 
@@ -66,7 +66,7 @@ void Running::Update()
 	
 	if (e_score->GetOne() && (eve_->getPassOrFail() == 1))	// 이벤트 점수 부여
 	{
-		PhaseInterface::IncreaseScore(1000);
+		PhaseInterface::IncreaseScore(500);
 		e_score->SetOne(false);
 		g_score_update = true;
 	}
@@ -86,16 +86,16 @@ void Running::Update()
 		}
 		else if (!RightKey) {
 			train_speed_ -= 1;	// speed 자동 감소(최솟값 5, 최댓값 60)
-			if (train_speed_ < 5)
-				train_speed_ = 5;
-			else if (train_speed_ > 60)
-				train_speed_ = 60;
+			if (train_speed_ < 10)
+				train_speed_ = 10;
+			else if (train_speed_ > 54)
+				train_speed_ = 54;
 		}
 
 		arrow_destination_rect_.x -= arrow_speed_;
 
 		if (arrow_destination_rect_.x > 1064) //속도계상에서의 열차 속도 제한
-			train_speed_ = 60;
+			train_speed_ = 54;
 	}
 
 	// 위쪽 배경
@@ -128,7 +128,7 @@ void Running::Update()
 		}
 		else
 		{
-			PhaseInterface::IncreaseScore(10);
+			PhaseInterface::IncreaseScore(3);
 			g_score_update = true;
 		}
 	}
@@ -151,7 +151,7 @@ void Running::Update()
 			eve_->SetPast(1);
 			eve_->SetTimeOut(false);
 
-			train_speed_ = 60;
+			train_speed_ = 54;
 			train_distance_ = 0;
 			train_destination_rect_.x = -1188;
 			arrow_destination_rect_.x = 1080;
