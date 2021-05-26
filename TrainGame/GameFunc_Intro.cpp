@@ -5,6 +5,7 @@ Intro::Intro()
 	g_button_rect_1 = { 322, 406, 217, 90 };
 	g_button_rect_2 = { 637, 406, 217, 90 };
 	g_button_rect_3 = { 1030, 700, 130, 70 };
+	g_button_rect_4 = { 35, 720, 63, 56 };
 
 	SDL_Surface* intro_surface = IMG_Load("../../Resources/Intro.png");
 	intro_texture_ = SDL_CreateTextureFromSurface(g_renderer, intro_surface);
@@ -14,6 +15,7 @@ Intro::Intro()
 
 	SDL_Surface* manual_surface = IMG_Load("../../Resources/manual.png");
 	manual_texture_ = SDL_CreateTextureFromSurface(g_renderer, manual_surface);
+	SDL_SetTextureAlphaMod(manual_texture_, 255);
 	SDL_FreeSurface(manual_surface);
 	manual_source_rect_ = { 0, 0 ,1200 ,800 };
 	manual_destination_rect_ = { 0, 0, manual_source_rect_.w, manual_source_rect_.h };
@@ -26,10 +28,14 @@ Intro::Intro()
 	intro_title_texture_ = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
 	SDL_FreeSurface(tmp_surface);
 	TTF_CloseFont(font1);
+
+	manual_open_ = false;
 }
 
 void Intro::Update()
 {
+
+
 }
 
 void Intro::Render()
@@ -39,6 +45,15 @@ void Intro::Render()
 	SDL_Rect tmp_r;
 	tmp_r = { 320, 150, intro_title_rect_.w, intro_title_rect_.h };
 	SDL_RenderCopy(g_renderer, intro_title_texture_, &intro_title_rect_, &tmp_r);
+
+	if (manual_open_) {
+		SDL_SetTextureAlphaMod(manual_texture_, 255);
+		SDL_RenderCopy(g_renderer, manual_texture_, &manual_source_rect_, &manual_destination_rect_);
+	}
+	else if(!manual_open_){
+		SDL_SetTextureAlphaMod(manual_texture_, 0);
+		SDL_RenderCopy(g_renderer, manual_texture_, &manual_source_rect_, &manual_destination_rect_);
+	}
 
 	PhaseInterface::FadeIn();
 
@@ -72,7 +87,6 @@ void Intro::HandleEvents()
 					PhaseInterface::EndFade();
 					g_current_game_phase = PHASE_PLATFORM;
 				}
-					
 
 				// 게임종료 버튼
 				else if (mouse_x > g_button_rect_2.x &&
@@ -80,6 +94,19 @@ void Intro::HandleEvents()
 					mouse_x < g_button_rect_2.x + g_button_rect_2.w &&
 					mouse_y < g_button_rect_2.y + g_button_rect_2.h)
 					g_flag_running = false;
+
+				// 메뉴얼 버튼
+				else if (mouse_x > g_button_rect_3.x &&
+					mouse_y > g_button_rect_3.y &&
+					mouse_x < g_button_rect_3.x + g_button_rect_3.w &&
+					mouse_y < g_button_rect_3.y + g_button_rect_3.h)
+					manual_open_ = true;
+				// 메뉴얼 나가기
+				else if (mouse_x > g_button_rect_4.x &&
+					mouse_y > g_button_rect_4.y &&
+					mouse_x < g_button_rect_4.x + g_button_rect_4.w &&
+					mouse_y < g_button_rect_4.y + g_button_rect_4.h)
+					manual_open_ = false;
 			}
 			break;
 
@@ -93,4 +120,5 @@ Intro::~Intro()
 {
 	SDL_DestroyTexture(intro_texture_);
 	SDL_DestroyTexture(intro_title_texture_);
+	SDL_DestroyTexture(manual_texture_);
 }
