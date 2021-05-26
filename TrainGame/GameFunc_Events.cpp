@@ -74,7 +74,7 @@ Events::Events()
 	}
 
 	time_out_ = false;
-
+	right_key_ = false;
 }
 
 Events::~Events()
@@ -215,7 +215,15 @@ void Events::commandHandel() {
 				default: break;
 				}
 			}
+			if (event.key.keysym.sym == SDLK_RIGHT) {
+				right_key_ = true;
+			}
 			break;
+
+		case SDL_KEYUP:
+			if (event.key.keysym.sym == SDLK_RIGHT) {
+				right_key_ = false;
+			}
 
 		case SDL_MOUSEBUTTONDOWN:
 
@@ -262,6 +270,15 @@ int Events::getPassOrFail() {
 
 bool Events::getEventState() {
 	return eventState_;
+}
+
+// 오른쪽 방향키관련 
+void Events::SetRightKey(bool i) {
+	right_key_ = i;
+}
+
+bool Events::GetRightKey() {
+	return right_key_;
 }
 
 //===============================================================

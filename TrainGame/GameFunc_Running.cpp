@@ -76,6 +76,7 @@ void Running::Update()
 
 	// 이벤트 처리하는 동안 속도, 속도계 고정
 	if (!eve_->getEventState()) {
+		eve_->GetRightKey();
 
 		if (RightKey) {
 			train_speed_ += 2.5;
@@ -93,7 +94,6 @@ void Running::Update()
 
 		if (arrow_destination_rect_.x > 1064) //속도계상에서의 열차 속도 제한
 			train_speed_ = 60;
-
 	}
 
 	// 위쪽 배경
@@ -252,11 +252,13 @@ void Running::HandleEvents()
 			if (event.key.keysym.sym == SDLK_RIGHT)
 			{	// 오른쪽 키를 누르면 speed값 증가
 				RightKey = true;
+				eve_->SetRightKey(true);
 			}
 			break;
 		case SDL_KEYUP:
 			if (event.key.keysym.sym == SDLK_RIGHT) {
 				RightKey = false;
+				eve_->SetRightKey(false);
 			}
 
 		case SDL_MOUSEBUTTONDOWN:

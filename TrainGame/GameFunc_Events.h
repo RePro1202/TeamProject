@@ -46,7 +46,9 @@ private:
 	int passCount_;
 
 	bool time_out_;
+	bool right_key_;
 	int past_;
+
 
 public:
 	Events();
@@ -62,6 +64,9 @@ public:
 	void SetTimeOut(bool);
 	void SetPast(int i);
 	int GetPast();
+
+	void SetRightKey(bool i);
+	bool GetRightKey();
 };
 
 class EventScore 
