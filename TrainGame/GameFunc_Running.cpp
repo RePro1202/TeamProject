@@ -53,6 +53,8 @@ Running::Running()
 
 void Running::Update()
 {	
+	cout << RightKey << endl;
+
 	eve_->runEvent(train_distance_);	// distance값으로 이벤트 발생조건 검사
 
 	if (!eve_->getPassOrFail() && train_distance_ < 5) {	// 시간초과 커맨드 실패 판단
@@ -76,7 +78,7 @@ void Running::Update()
 
 	// 이벤트 처리하는 동안 속도, 속도계 고정
 	if (!eve_->getEventState()) {
-		eve_->GetRightKey();
+		RightKey = eve_->GetRightKey();
 
 		if (RightKey) {
 			train_speed_ += 2.5;
@@ -161,6 +163,8 @@ void Running::Update()
 			g_goal_time_update = true;
 			++g_day;// 시간대 변경
 
+			RightKey = false; 
+			eve_->SetRightKey(false);
 		}
 	}
 

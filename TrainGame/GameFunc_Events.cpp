@@ -89,8 +89,6 @@ Events::~Events()
 void Events::runEvent(int dis) {
 	distance_ = dis;
 
-	cout << commandState_ << " " << time_out_ << endl;
-
 	if (distance_ >= 2 && distance_ < 6) {
 		eventSet();
 		if (distance_ >= 5) {
