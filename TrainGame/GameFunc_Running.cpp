@@ -45,14 +45,24 @@ Running::Running()
 	train_distance_ = 0;
 	arrow_speed_ = 1.3;
 
+	RightKey = false;
+
 	eve_ = new Events;
 	e_score = new EventScore;
 }
 
 void Running::Update()
-{
+{	
 	eve_->runEvent(train_distance_);	// distance값으로 이벤트 발생조건 검사
-	if (e_score->GetOne() && (eve_->getPassOrFail() == 1))
+
+	if (!eve_->getPassOrFail() && train_distance_ < 5) {	// 시간초과 커맨드 실패 판단
+		eve_->SetPast(0);
+	}
+	if (train_distance_ >= 5 && eve_->GetPast() != 0) {
+		eve_->SetTimeOut(true);
+	}
+	
+	if (e_score->GetOne() && (eve_->getPassOrFail() == 1))	// 이벤트 점수 부여
 	{
 		PhaseInterface::IncreaseScore(1000);
 		e_score->SetOne(false);
@@ -66,16 +76,24 @@ void Running::Update()
 
 	// 이벤트 처리하는 동안 속도, 속도계 고정
 	if (!eve_->getEventState()) {
-		train_speed_ -= 1;	// speed 자동 감소(최솟값 5, 최댓값 60)
-		if (train_speed_ < 5)
-			train_speed_ = 5;
-		else if (train_speed_ > 60)
-			train_speed_ = 60;
 
+		if (RightKey) {
+			train_speed_ += 2.5;
+			arrow_speed_ = -3.0;
+		}
+		else if (!RightKey) {
+			train_speed_ -= 1;	// speed 자동 감소(최솟값 5, 최댓값 60)
+			if (train_speed_ < 5)
+				train_speed_ = 5;
+			else if (train_speed_ > 60)
+				train_speed_ = 60;
+		}
 
 		arrow_destination_rect_.x -= arrow_speed_;
+
 		if (arrow_destination_rect_.x > 1064) //속도계상에서의 열차 속도 제한
 			train_speed_ = 60;
+
 	}
 
 	// 위쪽 배경
@@ -100,7 +118,7 @@ void Running::Update()
 	else if (arrow_destination_rect_.x > 1131) {
 		arrow_destination_rect_.x = 1131;
 	}
-	if (!eve_->getEventState()) {
+	if (!eve_->getEventState()) {	// 이벤트중 점수 변화 멈춤
 		//속도계 눈금 벗어났을때 Score감소
 		if (arrow_destination_rect_.x < 1064 || arrow_destination_rect_.x > 1096) {
 			PhaseInterface::DecreaseScore(10);
@@ -128,6 +146,8 @@ void Running::Update()
 			g_current_game_phase = PHASE_PLATFORM;
 			PhaseInterface::EndFade();
 			e_score->SetOne(true);
+			eve_->SetPast(1);
+			eve_->SetTimeOut(false);
 
 			train_speed_ = 60;
 			train_distance_ = 0;
@@ -231,10 +251,13 @@ void Running::HandleEvents()
 		case SDL_KEYDOWN:
 			if (event.key.keysym.sym == SDLK_RIGHT)
 			{	// 오른쪽 키를 누르면 speed값 증가
-				train_speed_ += 2.5;
-				arrow_speed_ = -3.0;
+				RightKey = true;
 			}
 			break;
+		case SDL_KEYUP:
+			if (event.key.keysym.sym == SDLK_RIGHT) {
+				RightKey = false;
+			}
 
 		case SDL_MOUSEBUTTONDOWN:
 

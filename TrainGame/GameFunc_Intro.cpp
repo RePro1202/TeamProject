@@ -4,12 +4,19 @@ Intro::Intro()
 {
 	g_button_rect_1 = { 322, 406, 217, 90 };
 	g_button_rect_2 = { 637, 406, 217, 90 };
+	g_button_rect_3 = { 1030, 700, 130, 70 };
 
 	SDL_Surface* intro_surface = IMG_Load("../../Resources/Intro.png");
 	intro_texture_ = SDL_CreateTextureFromSurface(g_renderer, intro_surface);
 	SDL_FreeSurface(intro_surface);
 	intro_source_rect_ = { 0, 0 ,1200 ,800 };
 	intro_destination_rect_ = { 0, 0, intro_source_rect_.w, intro_source_rect_.h };
+
+	SDL_Surface* manual_surface = IMG_Load("../../Resources/manual.png");
+	manual_texture_ = SDL_CreateTextureFromSurface(g_renderer, manual_surface);
+	SDL_FreeSurface(manual_surface);
+	manual_source_rect_ = { 0, 0 ,1200 ,800 };
+	manual_destination_rect_ = { 0, 0, manual_source_rect_.w, manual_source_rect_.h };
 
 	// Font
 	TTF_Font* font1 = TTF_OpenFont("../../Resources/ALBAS___.ttf", 100);

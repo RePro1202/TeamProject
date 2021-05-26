@@ -44,7 +44,9 @@ private:
 	int commandCount_;
 	int random_;
 	int passCount_;
+
 	bool time_out_;
+	int past_;
 
 public:
 	Events();
@@ -57,6 +59,9 @@ public:
 	void showEvent();
 	void commandHandel();
 	void compareCommand();
+	void SetTimeOut(bool);
+	void SetPast(int i);
+	int GetPast();
 };
 
 class EventScore 
@@ -70,5 +75,6 @@ public:
 
 	void SetOne(bool i);
 	bool GetOne();
+
 
 };

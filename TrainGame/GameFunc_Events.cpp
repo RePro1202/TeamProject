@@ -66,13 +66,14 @@ Events::Events()
 	commandState_ = COMMAND_NONE;	// 커맨드 성공여부
 	commandCount_ = 0;	// 커맨드 카운트
 	passCount_ = 0;	// 커맨드 성공 횟수( 커맨드를 여러 세트 성공해야 통과 기능 위해서)
+	past_ = COMMAND_NONE;
 
 	for (int i = 0; i < 5; i++) {
 		command_[i] = 0;
 		trueCommand_[i] = rand() % 4;	// 정답 커맨드 랜덤 생성
 	}
 
-	time_out_ = 0;
+	time_out_ = false;
 
 }
 
@@ -87,6 +88,8 @@ Events::~Events()
 
 void Events::runEvent(int dis) {
 	distance_ = dis;
+
+	cout << commandState_ << " " << time_out_ << endl;
 
 	if (distance_ >= 2 && distance_ < 6) {
 		eventSet();
@@ -117,19 +120,11 @@ void Events::eventSet() {
 		break;
 	case COMMAND_PASS:
 		if (passCount_ == 2) {
-			// ----> 점수 추가
 			eventState_ = false;
 
 		} break;
 	case COMMAND_FAIL:
-		// ------> 점수 감점
 		eventState_ = false;
-		if (distance_ < 5) {
-			time_out_ = 1;
-		}
-		else {
-			time_out_ = 0;
-		}
 		break;
 	default:
 		eventState_ = false;
@@ -161,10 +156,10 @@ void Events::showEvent() {
 		SDL_RenderCopy(g_renderer, output_texture_[0], &output_rect_, &tmp_r);
 	}
 	else if (commandState_ == COMMAND_FAIL && !time_out_) {
-		SDL_RenderCopy(g_renderer, output_texture_[2], &output_rect_, &tmp_r);
-	}
-	else if (time_out_) {
 		SDL_RenderCopy(g_renderer, output_texture_[1], &output_rect_, &tmp_r);
+	}
+	else if (time_out_ && distance_ < 6) {
+		SDL_RenderCopy(g_renderer, output_texture_[2], &output_rect_, &tmp_r);
 	}
 }
 
@@ -239,6 +234,18 @@ void Events::commandHandel() {
 			break;
 		}
 	}
+}
+
+void Events::SetTimeOut(bool i) {
+	time_out_ = i;
+}
+
+void Events::SetPast(int i) {
+	past_ = i;
+}
+
+int Events::GetPast() {
+	return past_;
 }
 
 int Events::getPassOrFail() {

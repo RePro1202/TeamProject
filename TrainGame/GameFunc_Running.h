@@ -26,6 +26,8 @@ private:
 	Events* eve_;
 	EventScore* e_score;
 
+	bool RightKey;
+
 public:
 	Running();
 	~Running();
