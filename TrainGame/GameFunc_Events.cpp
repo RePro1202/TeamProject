@@ -21,7 +21,7 @@ Events::Events()
 
 	SDL_Surface* tmp_surface = TTF_RenderText_Blended(output_font_, "Success!", black_);
 	output_texture_[0] = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
-	SDL_Surface* tmp_surface2 = TTF_RenderText_Blended(output_font_, "Fail", black_);
+	SDL_Surface* tmp_surface2 = TTF_RenderText_Blended(output_font_, "  Fail  ", black_);
 	output_texture_[1] = SDL_CreateTextureFromSurface(g_renderer, tmp_surface2);
 	SDL_Surface* tmp_surface3 = TTF_RenderText_Blended(output_font_, "Time out", black_);
 	output_texture_[2] = SDL_CreateTextureFromSurface(g_renderer, tmp_surface3);
@@ -59,20 +59,21 @@ Events::Events()
 		command_destination_rect_[i] = { x, 300, 100, 100 };
 		x += 100;
 	}
-	
+
 	distance_ = 0;	// Runnig에서 가져온 distance값 저장
 	eventState_ = false;	// 이벤트 발생중인지 아닌지
 	random_ = rand() % 7 + 1;	// 이벤트 종류 랜덤값
 	commandState_ = COMMAND_NONE;	// 커맨드 성공여부
 	commandCount_ = 0;	// 커맨드 카운트
 	passCount_ = 0;	// 커맨드 성공 횟수( 커맨드를 여러 세트 성공해야 통과 기능 위해서)
-	
+
 	for (int i = 0; i < 5; i++) {
 		command_[i] = 0;
 		trueCommand_[i] = rand() % 4;	// 정답 커맨드 랜덤 생성
 	}
 
 	time_out_ = 0;
+
 }
 
 Events::~Events()
@@ -99,6 +100,7 @@ void Events::runEvent(int dis) {
 		eventState_ = false;
 		random_ = rand() % 7 + 1;
 		commandCount_ = 0;
+		
 
 		for (int i = 0; i < 5; i++) {
 			trueCommand_[i] = rand() % 4;
@@ -117,11 +119,12 @@ void Events::eventSet() {
 		if (passCount_ == 2) {
 			// ----> 점수 추가
 			eventState_ = false;
+
 		} break;
 	case COMMAND_FAIL:
 		// ------> 점수 감점
 		eventState_ = false;
-		if (distance_ < 4) {
+		if (distance_ < 5) {
 			time_out_ = 1;
 		}
 		else {
@@ -136,12 +139,12 @@ void Events::eventSet() {
 }
 
 void Events::showEvent() {
-	
+
 	if (eventState_) {
 		// 이벤트 종류 출력
 		SDL_RenderCopy(g_renderer, events_texture_, &events_source_rect_[0], &events_destination_rect_[0]);
 		SDL_RenderCopy(g_renderer, events_texture_, &events_source_rect_[random_], &events_destination_rect_[random_]);
-		
+
 		// 커맨드 출력
 		for (int i = 0; i < 5; i++) {
 			SDL_RenderCopy(g_renderer, command_texture_, &command_source_rect_[trueCommand_[i]], &command_destination_rect_[i]);
@@ -158,7 +161,7 @@ void Events::showEvent() {
 		SDL_RenderCopy(g_renderer, output_texture_[0], &output_rect_, &tmp_r);
 	}
 	else if (commandState_ == COMMAND_FAIL && !time_out_) {
-		SDL_RenderCopy(g_renderer, output_texture_[2], &output_rect_, &tmp_r);	
+		SDL_RenderCopy(g_renderer, output_texture_[2], &output_rect_, &tmp_r);
 	}
 	else if (time_out_) {
 		SDL_RenderCopy(g_renderer, output_texture_[1], &output_rect_, &tmp_r);
@@ -167,7 +170,7 @@ void Events::showEvent() {
 
 void Events::compareCommand() {
 
-	if (command_[commandCount_] == trueCommand_[commandCount_]) 
+	if (command_[commandCount_] == trueCommand_[commandCount_])
 	{
 		if (commandCount_ == 4) {
 			commandState_ = COMMAND_PASS;
@@ -178,10 +181,10 @@ void Events::compareCommand() {
 			}
 		}
 		else {
-			commandCount_++; 
+			commandCount_++;
 		}
 	}
-	else{
+	else {
 		commandState_ = COMMAND_FAIL;
 		commandCount_ = 0;
 	}
@@ -192,57 +195,83 @@ void Events::commandHandel() {
 	SDL_Event event;
 
 	if (eventState_ && SDL_PollEvent(&event)) {
-			switch (event.type)
-			{
-			case SDL_QUIT:
-				g_flag_running = false;
-				break;
+		switch (event.type)
+		{
+		case SDL_QUIT:
+			g_flag_running = false;
+			break;
 
-			case SDL_KEYDOWN:
-				if (commandCount_ < 5) {
-					switch (event.key.keysym.sym)
-					{
-					case SDLK_w:
-						command_[commandCount_] = 0;
-						compareCommand(); break;
-					case SDLK_s:
-						command_[commandCount_] = 2;
-						compareCommand(); break;
-					case SDLK_a:
-						command_[commandCount_] = 1;
-						compareCommand(); break;
-					case SDLK_d:
-						command_[commandCount_] = 3;
-						compareCommand(); break;
-					default: break;
-					}
-				}
-				break;
-
-			case SDL_MOUSEBUTTONDOWN:
-
-				// If the mouse left button is pressed. 
-				if (event.button.button == SDL_BUTTON_LEFT)
+		case SDL_KEYDOWN:
+			if (commandCount_ < 5) {
+				switch (event.key.keysym.sym)
 				{
-					g_current_game_phase = PHASE_ENDING;
+				case SDLK_w:
+					command_[commandCount_] = 0;
+					compareCommand(); break;
+				case SDLK_s:
+					command_[commandCount_] = 2;
+					compareCommand(); break;
+				case SDLK_a:
+					command_[commandCount_] = 1;
+					compareCommand(); break;
+				case SDLK_d:
+					command_[commandCount_] = 3;
+					compareCommand(); break;
+				default: break;
 				}
-				else if (event.button.button == SDL_BUTTON_RIGHT)
-				{
-					g_current_game_phase = PHASE_ENDING;
-				}
-				break;
-
-			default:
-				break;
 			}
+			break;
+
+		case SDL_MOUSEBUTTONDOWN:
+
+			// If the mouse left button is pressed. 
+			if (event.button.button == SDL_BUTTON_LEFT)
+			{
+				g_current_game_phase = PHASE_ENDING;
+			}
+			else if (event.button.button == SDL_BUTTON_RIGHT)
+			{
+				g_current_game_phase = PHASE_ENDING;
+			}
+			break;
+
+		default:
+			break;
 		}
+	}
 }
 
 int Events::getPassOrFail() {
 	// fail = 0, pass = 1, none = 2
-	return commandState_;
+	if (passCount_ == 2) {
+		return 1;
+	}
+	else if (commandState_ == COMMAND_FAIL) {
+		return 0;
+	}
+	else
+		return 2;
 }
 
 bool Events::getEventState() {
 	return eventState_;
+}
+
+//===============================================================
+
+EventScore::EventScore() {
+	one_ = true;
+
+}
+
+EventScore::~EventScore() {
+
+}
+
+void EventScore::SetOne(bool i) {
+	one_ = i;
+}
+
+bool EventScore::GetOne() {
+	return one_;
 }

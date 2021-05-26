@@ -42,9 +42,10 @@ extern int g_time_hour;
 extern int g_time_min;
 extern int g_time_sec;
 extern int g_train_pos;
-
+extern int g_score;
 extern bool g_goal_time_update;
 extern bool g_time_update;
+extern bool g_score_update;
 extern bool g_train_pos_update;
 
 
@@ -57,7 +58,10 @@ private:
 	SDL_Rect ui_destination_rectangle_[5];
 	// Font 관련 변수
 	TTF_Font* UI_font_;
+	TTF_Font* ending_font_;
 	SDL_Color darkblue_;
+	SDL_Color yellow_;
+	SDL_Color black_;
 	// Time 관련 변수
 	SDL_Rect time_rect_;
 	SDL_Texture* time_texture_;
@@ -76,13 +80,15 @@ private:
 	int goal_morning_m_;
 	int goal_daytime_m_;
 	int goal_evening_m_;
-	int score; // 게임의 스코어
-
-
 	SDL_Texture* black_texture_;
 	SDL_Rect black_source_rect_;
 	SDL_Rect black_destination_rect_;
 	int alpha_;
+	// Score 관련 변수
+	SDL_Texture* score_texture_;
+	SDL_Rect score_rect_;
+	const char* score_char_;
+	char buf2_[256];
 
 public:
 	PhaseInterface();
@@ -100,11 +106,20 @@ public:
 	SDL_Rect GetGoalTimeRect() { return goal_time_rect_; };
 	// TrainPos 관련 함수
 	void TrainPosUpdate();
-	void DecreaseScore();
+	// Score 관련 함수
+	void SetScoreFont();
+	void IncreaseScore(int score);
+	void DecreaseScore(int score);
+	int GoalSuccess();
+	SDL_Texture* GetScoreTexture() { return score_texture_; };
+	SDL_Rect GetScoreRect() { return score_rect_; };
+	// Ending
+	void SetEndingTimeFont();
+	void SetEndingScoreFont();
 
 	//페이드 인, 아웃
 	void FadeIn();
-	void FadeOut(int);
+	void FadeOut(int i);
 	void EndFade();
 
 	virtual void HandleEvents() = 0;

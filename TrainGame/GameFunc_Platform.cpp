@@ -1,4 +1,5 @@
 #include "GameFunc_Platform.h"
+#include "ctime"
 
 Platform::Platform()
 {
@@ -52,14 +53,13 @@ Platform::Platform()
 	door_destination_rect_ = { 500 ,500,45,110 }; // 임시 좌표값, 문의 크기 45 110
 	sign_destination_rect_ = { 600 ,250,100,100 };
 
+	score_count_ = 0;
 	/*
-
 	people_count = 10;// 출현 할 사람수
 	random_count_ = 30; // 배열로 지정된 사람 최대수
 	random2_count_ = people_count;
 	door_count_ = 42; // 문이 움직일 변수
 	train2_count_ = 4;
-
 	for (int i = 0; i < 5; i++)
 	{
 		door_stop_destination_[i * 2][0] = 83 + i * 168;   // 왼쪽 문 위치
@@ -67,9 +67,7 @@ Platform::Platform()
 		door_stop_destination_[i * 2 + 1][0] = 125 + i * 168; // 오른쪽 문 위치
 		door_stop_destination_[i * 2 + 1][1] = 438;
 	}
-
 	srand((unsigned int)time(NULL)); // 랜덤
-
 	for (int i = 0; i < 5; i++)
 	{
 		people_stop_destination_[i] = 0; // 해당 문의 차례
@@ -95,9 +93,6 @@ Platform::Platform()
 			random_count_--;
 		}
 	}
-
-
-
 	train_state_ = TRAIN_IN;
 	train_speed_ = 0;
 	stop_destination_ = -775;
@@ -107,6 +102,20 @@ Platform::Platform()
 
 void Platform::Update()
 {
+	// 목표시간 안에 도착하면 스코어증가
+	if (PhaseInterface::GoalSuccess() == 1 && g_day != DAY_MORNING && score_count_ == 0)
+	{
+		PhaseInterface::IncreaseScore(1000);
+		g_score_update = true;
+		score_count_++;
+	}
+	else if (PhaseInterface::GoalSuccess() == 0 && g_day != DAY_MORNING && score_count_ == 0)
+	{
+		PhaseInterface::DecreaseScore(1000);
+		g_score_update = true;
+		score_count_++;
+	}
+
 	if (train_state_ == TRAIN_IN)
 	{
 		if (train_destination_rect_.x < -1599)  // 초기화 부분 
@@ -256,15 +265,17 @@ void Platform::Update()
 		if (train_destination_rect_.x > BLOCK_X_MAX)
 		{
 			g_current_game_phase = PHASE_RUNNING;
-		
+
 			PhaseInterface::EndFade();
 
 			train_destination_rect_.x = -1600;
 			train_state_ = TRAIN_IN;
 			train_speed_ = 0;
 			consumption_time_ = 3;
+			score_count_ = 0;
 
 			g_time_update = true;
+			g_score_update = true;
 			g_train_pos_update = true;
 			g_goal_time_update = true;
 		}
@@ -354,17 +365,26 @@ void Platform::Render()
 	SDL_Texture* tmp_texture = PhaseInterface::GetGoalTimeTexture();
 	SDL_Rect tmp_rect = PhaseInterface::GetGoalTimeRect();
 	SDL_RenderCopy(g_renderer, tmp_texture, &tmp_rect, &tmp_r);
-	// Time 최신화
+	// Time Render
 	if (g_time_update)
 	{
 		PhaseInterface::SetTimeFont();
 		g_time_update = false;
 	}
-	// Time Render
 	SDL_Rect tmp_r2 = { 145, 92, 110, 60 };
 	SDL_Texture* tmp_texture2 = PhaseInterface::GetTimeTexture();
 	SDL_Rect tmp_rect2 = PhaseInterface::GetTimeRect();
 	SDL_RenderCopy(g_renderer, tmp_texture2, &tmp_rect2, &tmp_r2);
+	// Score
+	if (g_score_update)
+	{
+		PhaseInterface::SetScoreFont();
+		g_score_update = false;
+	}
+	SDL_Rect tmp_r3 = { 1070, 55, 70, 50 };
+	SDL_Texture* tmp_texture3 = PhaseInterface::GetScoreTexture();
+	SDL_Rect tmp_rect3 = PhaseInterface::GetScoreRect();
+	SDL_RenderCopy(g_renderer, tmp_texture3, &tmp_rect3, &tmp_r3);
 
 	if (train_state_ == TRAIN_IN) {
 		PhaseInterface::FadeIn();
@@ -396,11 +416,14 @@ void Platform::HandleEvents()
 					sign_count_ = 1;
 					sign_time_ = 30;
 				}
-				else if (g_day == DAY_NIGHT)
-					g_current_game_phase = PHASE_ENDING;
 				else if (people_count != 0 && g_day != DAY_NIGHT) {
 					sign_count_ = 2;
 					sign_time_ = 30;
+				}
+				else if (g_day == DAY_NIGHT) {
+					g_current_game_phase = PHASE_ENDING;
+					g_time_update = true;
+					g_score_update = true;
 				}
 			}
 			break;

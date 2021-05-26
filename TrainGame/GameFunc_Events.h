@@ -30,7 +30,7 @@ private:
 	SDL_Texture* command_texture_green_;
 	SDL_Rect command_source_rect_[4];
 	SDL_Rect command_destination_rect_[5];
-	
+
 	SDL_Texture* output_texture_[3];
 	SDL_Rect output_rect_;
 	TTF_Font* output_font_;
@@ -45,6 +45,7 @@ private:
 	int random_;
 	int passCount_;
 	bool time_out_;
+
 public:
 	Events();
 	~Events();
@@ -56,4 +57,18 @@ public:
 	void showEvent();
 	void commandHandel();
 	void compareCommand();
+};
+
+class EventScore 
+{
+private:
+	bool one_;
+
+public:
+	EventScore();
+	~EventScore();
+
+	void SetOne(bool i);
+	bool GetOne();
+
 };

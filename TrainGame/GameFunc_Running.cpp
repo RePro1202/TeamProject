@@ -46,24 +46,36 @@ Running::Running()
 	arrow_speed_ = 1.3;
 
 	eve_ = new Events;
-
+	e_score = new EventScore;
 }
 
 void Running::Update()
 {
 	eve_->runEvent(train_distance_);	// distance값으로 이벤트 발생조건 검사
-	
+	if (e_score->GetOne() && (eve_->getPassOrFail() == 1))
+	{
+		PhaseInterface::IncreaseScore(1000);
+		e_score->SetOne(false);
+		g_score_update = true;
+	}
+	else if (e_score->GetOne() && (eve_->getPassOrFail() == 0)) {
+		PhaseInterface::DecreaseScore(500);
+		e_score->SetOne(false);
+		g_score_update = true;
+	}
+
 	// 이벤트 처리하는 동안 속도, 속도계 고정
 	if (!eve_->getEventState()) {
-		train_speed_ -= 1;	// speed 자동 감소(최솟값 20, 최댓값 50)
+		train_speed_ -= 1;	// speed 자동 감소(최솟값 5, 최댓값 60)
 		if (train_speed_ < 5)
 			train_speed_ = 5;
 		else if (train_speed_ > 60)
 			train_speed_ = 60;
 
+
 		arrow_destination_rect_.x -= arrow_speed_;
 		if (arrow_destination_rect_.x > 1064) //속도계상에서의 열차 속도 제한
-			train_speed_ = 60; 
+			train_speed_ = 60;
 	}
 
 	// 위쪽 배경
@@ -82,15 +94,23 @@ void Running::Update()
 	}
 
 	// 속도계 화살표
-	
 	if (arrow_destination_rect_.x < 954) {
 		arrow_destination_rect_.x = 954;
 	}
 	else if (arrow_destination_rect_.x > 1131) {
 		arrow_destination_rect_.x = 1131;
 	}
-	else if (arrow_destination_rect_.x < 1064 || arrow_destination_rect_.x > 1096) {  //속도계 눈금 벗어났을때 감점..조건절 추후 변경예정..
-		PhaseInterface::DecreaseScore();
+	if (!eve_->getEventState()) {
+		//속도계 눈금 벗어났을때 Score감소
+		if (arrow_destination_rect_.x < 1064 || arrow_destination_rect_.x > 1096) {
+			PhaseInterface::DecreaseScore(10);
+			g_score_update = true;
+		}
+		else
+		{
+			PhaseInterface::IncreaseScore(10);
+			g_score_update = true;
+		}
 	}
 
 	arrow_speed_ = 1.3;
@@ -106,8 +126,8 @@ void Running::Update()
 		if (train_destination_rect_.x > BLOCK_X_MAX)
 		{
 			g_current_game_phase = PHASE_PLATFORM;
-			//PhaseInterface::TrainPosUpdate();
 			PhaseInterface::EndFade();
+			e_score->SetOne(true);
 
 			train_speed_ = 60;
 			train_distance_ = 0;
@@ -116,6 +136,7 @@ void Running::Update()
 			Mix_PauseMusic();
 
 			g_time_update = true;
+			g_score_update = true;
 			g_train_pos_update = true;
 			g_goal_time_update = true;
 			++g_day;// 시간대 변경
@@ -156,17 +177,26 @@ void Running::Render()
 	SDL_Texture* tmp_texture = PhaseInterface::GetGoalTimeTexture();
 	SDL_Rect tmp_rect = PhaseInterface::GetGoalTimeRect();
 	SDL_RenderCopy(g_renderer, tmp_texture, &tmp_rect, &tmp_r);
-	// Time 최신화
+	// Time Render
 	if (g_time_update)
 	{
 		PhaseInterface::SetTimeFont();
 		g_time_update = false;
 	}
-	// Time Render
 	SDL_Rect tmp_r2 = { 145, 92, 110, 60 };
 	SDL_Texture* tmp_texture2 = PhaseInterface::GetTimeTexture();
 	SDL_Rect tmp_rect2 = PhaseInterface::GetTimeRect();
 	SDL_RenderCopy(g_renderer, tmp_texture2, &tmp_rect2, &tmp_r2);
+	// Score
+	if (g_score_update)
+	{
+		PhaseInterface::SetScoreFont();
+		g_score_update = false;
+	}
+	SDL_Rect tmp_r3 = { 1070, 55, 70, 50 };
+	SDL_Texture* tmp_texture3 = PhaseInterface::GetScoreTexture();
+	SDL_Rect tmp_rect3 = PhaseInterface::GetScoreRect();
+	SDL_RenderCopy(g_renderer, tmp_texture3, &tmp_rect3, &tmp_r3);
 
 	//arrow
 	SDL_RenderCopy(g_renderer, arrow_texture_, &arrow_source_rect_, &arrow_destination_rect_);

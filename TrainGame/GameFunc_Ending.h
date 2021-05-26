@@ -9,6 +9,8 @@ private:
 	SDL_Rect ending_title_rect_;
 	TTF_Font* ending_font_;
 	SDL_Color black_;
+	SDL_Rect board_rect_;
+	bool render_complete;
 public:
 	Ending();
 	~Ending();

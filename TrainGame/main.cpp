@@ -21,8 +21,10 @@ int g_time_hour;
 int g_time_min;
 int g_time_sec;
 int g_train_pos;
+int g_score;
 bool g_goal_time_update;
 bool g_time_update;
+bool g_score_update;
 bool g_train_pos_update;
 
 int main(int argc, char* argv[])
@@ -41,12 +43,9 @@ int main(int argc, char* argv[])
 	InitGame();
 	PhaseInterface* game_phase[4];
 	game_phase[PHASE_INTRO] = new Intro;
-	game_phase[PHASE_RUNNING] = new Running;
 	game_phase[PHASE_PLATFORM] = new Platform;
+	game_phase[PHASE_RUNNING] = new Running;
 	game_phase[PHASE_ENDING] = new Ending;
-
-	//g_current_game_phase = PHASE_INTRO;
-	//g_day = DAY_MORNING;
 
 	g_last_time_ms = SDL_GetTicks();
 
@@ -62,7 +61,6 @@ int main(int argc, char* argv[])
 		game_phase[g_current_game_phase]->Render();
 
 		g_last_time_ms = cur_time_ms;
-
 	}
 
 	for (int i = 0; i < 4; ++i)

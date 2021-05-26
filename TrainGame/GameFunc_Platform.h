@@ -52,6 +52,7 @@ private:
 	SDL_Rect door_destination_rect_;
 	int door_stop_destination_[10][2];   // ¹®°¹¼ö /   0 : x  , 1 : y;
 	///
+	int score_count_;
 public:
 	Platform();
 	~Platform();
