@@ -18,12 +18,14 @@ Events::Events()
 	// 성공 실패 메세지 폰트
 	output_font_ = TTF_OpenFont("../../Resources/Robotomono.ttf", 80);
 	black_ = { 0,0,0,0 };
+	red_ = { 170,0,0,180 };
+	green_ = { 0,170,0,180 };
 
-	SDL_Surface* tmp_surface = TTF_RenderText_Blended(output_font_, "Success!", black_);
+	SDL_Surface* tmp_surface = TTF_RenderText_Blended(output_font_, "Success!", green_);
 	output_texture_[0] = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
-	SDL_Surface* tmp_surface2 = TTF_RenderText_Blended(output_font_, "  Fail  ", black_);
+	SDL_Surface* tmp_surface2 = TTF_RenderText_Blended(output_font_, "  Fail  ", red_);
 	output_texture_[1] = SDL_CreateTextureFromSurface(g_renderer, tmp_surface2);
-	SDL_Surface* tmp_surface3 = TTF_RenderText_Blended(output_font_, "Time out", black_);
+	SDL_Surface* tmp_surface3 = TTF_RenderText_Blended(output_font_, "Time out", red_);
 	output_texture_[2] = SDL_CreateTextureFromSurface(g_renderer, tmp_surface3);
 
 	output_rect_ = { 0, 0, tmp_surface->w, tmp_surface->h };
@@ -84,6 +86,7 @@ Events::~Events()
 	SDL_DestroyTexture(command_texture_green_);
 	SDL_DestroyTexture(output_texture_[0]);
 	SDL_DestroyTexture(output_texture_[1]);
+	SDL_DestroyTexture(output_texture_[2]);
 }
 
 void Events::runEvent(int dis) {

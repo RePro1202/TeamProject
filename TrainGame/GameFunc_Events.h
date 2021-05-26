@@ -36,6 +36,9 @@ private:
 	TTF_Font* output_font_;
 	SDL_Color black_;
 
+	SDL_Color red_;
+	SDL_Color green_;
+
 	int distance_;
 	bool eventState_;
 	int commandState_;
