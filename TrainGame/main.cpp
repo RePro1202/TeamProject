@@ -26,6 +26,9 @@ bool g_goal_time_update;
 bool g_time_update;
 bool g_score_update;
 bool g_train_pos_update;
+Mix_Music* g_bg_music;
+Mix_Chunk* g_train_run_sound;
+Mix_Chunk* g_train_start_sound;
 
 int main(int argc, char* argv[])
 {
@@ -55,7 +58,6 @@ int main(int argc, char* argv[])
 		if (cur_time_ms - g_last_time_ms < 33)
 			continue;
 
-		//g_current_game_phase = PHASE_RUNNING;
 		game_phase[g_current_game_phase]->HandleEvents();
 		game_phase[g_current_game_phase]->Update();
 		game_phase[g_current_game_phase]->Render();
@@ -68,6 +70,7 @@ int main(int argc, char* argv[])
 		delete game_phase[i];
 	}
 
+	ClearGame();
 	SDL_DestroyRenderer(g_renderer);
 	SDL_DestroyWindow(g_window);
 

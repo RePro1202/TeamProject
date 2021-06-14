@@ -5,6 +5,8 @@
 class Ending : public PhaseInterface
 {
 private:
+	SDL_Texture* ending_out_texture_;
+	SDL_Rect ending_out_rect_;
 	SDL_Texture* ending_title_texture_;
 	SDL_Rect ending_title_rect_;
 	TTF_Font* ending_font_;

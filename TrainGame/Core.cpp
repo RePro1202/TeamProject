@@ -13,9 +13,15 @@ void InitGame() {
 	g_time_update = false;
 	g_score_update = true;
 	g_train_pos_update = false;
+	g_bg_music = Mix_LoadMUS("../../Resources/Intro_train.mp3");
+	g_train_run_sound = Mix_LoadWAV("../../Resources/running_train.wav");
+	g_train_start_sound = Mix_LoadWAV("../../Resources/starting_train.wav");
 }
 
 void ClearGame() {
+	Mix_FreeMusic(g_bg_music);
+	Mix_FreeChunk(g_train_run_sound);
+	Mix_FreeChunk(g_train_start_sound);
 }
 
 //// UserInterface////

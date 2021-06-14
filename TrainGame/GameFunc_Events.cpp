@@ -104,7 +104,7 @@ void Events::runEvent(int dis) {
 		eventState_ = false;
 		random_ = rand() % 7 + 1;
 		commandCount_ = 0;
-		
+
 
 		for (int i = 0; i < 5; i++) {
 			trueCommand_[i] = rand() % 4;
@@ -225,20 +225,6 @@ void Events::commandHandel() {
 			if (event.key.keysym.sym == SDLK_RIGHT) {
 				right_key_ = false;
 			}
-		/*
-		case SDL_MOUSEBUTTONDOWN:
-
-			// If the mouse left button is pressed. 
-			if (event.button.button == SDL_BUTTON_LEFT)
-			{
-				g_current_game_phase = PHASE_ENDING;
-			}
-			else if (event.button.button == SDL_BUTTON_RIGHT)
-			{
-				g_current_game_phase = PHASE_ENDING;
-			}
-			break;
-		*/
 		default:
 			break;
 		}

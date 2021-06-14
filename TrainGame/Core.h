@@ -8,8 +8,6 @@
 #include "SDL_mixer.h"
 #include "SDL_image.h"
 
-using namespace std;
-
 #define BLOCK_X_MAX 1200
 #define BLOCK_Y_MAX 800
 
@@ -23,6 +21,12 @@ enum Phase
 	PHASE_PLATFORM,
 	PHASE_RUNNING,
 	PHASE_ENDING
+};
+
+enum BackGrounf
+{
+	BG_INTRO,
+	BG_ENDING
 };
 
 enum Day
@@ -47,6 +51,9 @@ extern bool g_goal_time_update;
 extern bool g_time_update;
 extern bool g_score_update;
 extern bool g_train_pos_update;
+extern Mix_Music* g_bg_music;
+extern Mix_Chunk* g_train_run_sound;
+extern Mix_Chunk* g_train_start_sound;
 
 
 class PhaseInterface

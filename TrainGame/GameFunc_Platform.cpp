@@ -27,12 +27,10 @@ Platform::Platform()
 	train2_destination_rect_ = { -773 , 380, train2_source_rect_.w, train2_source_rect_.h };
 
 	SDL_Surface* people_surface = IMG_Load("../../Resources/people.png");
-	//SDL_SetColorKey(train_surface, SDL_TRUE, SDL_MapRGB(train_surface->format, 100, 170, 150));
 	people_texture_ = SDL_CreateTextureFromSurface(g_renderer, people_surface);
 	SDL_FreeSurface(people_surface);
 
 	SDL_Surface* sign_surface = IMG_Load("../../Resources/signal.png");
-	//SDL_SetColorKey(sign_surface, SDL_TRUE, SDL_MapRGB(sign_surface->format, 100, 170, 150));
 	sign_texture_ = SDL_CreateTextureFromSurface(g_renderer, sign_surface);
 	sign_source_rect_fail_ = { 229, 268 ,773 ,784 }; //  fail
 	sign_source_rect_good_ = { 1141,268  ,773 ,784 }; // good
@@ -40,7 +38,6 @@ Platform::Platform()
 	SDL_FreeSurface(sign_surface);
 
 	SDL_Surface* door_surface = IMG_Load("../../Resources/door.png");
-	//SDL_SetColorKey(train_surface, SDL_TRUE, SDL_MapRGB(train_surface->format, 100, 170, 150));
 	door_texture_ = SDL_CreateTextureFromSurface(g_renderer, door_surface);
 	SDL_FreeSurface(door_surface);
 
@@ -55,7 +52,6 @@ Platform::Platform()
 	sign_destination_rect_ = { 600 ,250,100,100 };
 
 	score_count_ = 0;
-	
 }
 
 void Platform::Update()
@@ -236,12 +232,17 @@ void Platform::Update()
 			g_score_update = true;
 			g_train_pos_update = true;
 			g_goal_time_update = true;
+
+			Mix_PlayChannel(-1, g_train_run_sound, 0);
 		}
 	}
 
 	if (g_day == DAY_NIGHT && train_state_ == TRAIN_STOP) {
 		g_current_game_phase = PHASE_ENDING;
-
+		Mix_FreeMusic(g_bg_music);
+		g_bg_music = Mix_LoadMUS("../../Resources/Ending_train.mp3");
+		Mix_FadeInMusic(g_bg_music, -1, 2000);
+		Mix_VolumeMusic(60);
 	}
 	train_destination_rect_.x += train_speed_;
 
@@ -373,6 +374,8 @@ void Platform::HandleEvents()
 					train_state_ = TRAIN_OUT;
 					sign_count_ = 1;
 					sign_time_ = 30;
+
+					Mix_PlayChannel(-1, g_train_start_sound, 0);
 				}
 				else if (people_count != 0 && g_day != DAY_NIGHT) {
 					sign_count_ = 2;
@@ -384,8 +387,6 @@ void Platform::HandleEvents()
 					g_score_update = true;
 				}
 			}
-			break;
-		default:
 			break;
 		}
 	}

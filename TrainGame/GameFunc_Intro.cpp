@@ -29,6 +29,8 @@ Intro::Intro()
 	SDL_FreeSurface(tmp_surface);
 	TTF_CloseFont(font1);
 
+	Mix_FadeInMusic(g_bg_music, -1, 2000);
+	Mix_VolumeMusic(60);
 	manual_open_ = false;
 }
 
@@ -50,7 +52,7 @@ void Intro::Render()
 		SDL_SetTextureAlphaMod(manual_texture_, 255);
 		SDL_RenderCopy(g_renderer, manual_texture_, &manual_source_rect_, &manual_destination_rect_);
 	}
-	else if(!manual_open_){
+	else if (!manual_open_) {
 		SDL_SetTextureAlphaMod(manual_texture_, 0);
 		SDL_RenderCopy(g_renderer, manual_texture_, &manual_source_rect_, &manual_destination_rect_);
 	}
@@ -86,6 +88,7 @@ void Intro::HandleEvents()
 
 					PhaseInterface::EndFade();
 					g_current_game_phase = PHASE_PLATFORM;
+					Mix_FadeOutMusic(2000);
 				}
 
 				// 게임종료 버튼

@@ -52,9 +52,7 @@ Running::Running()
 }
 
 void Running::Update()
-{	
-	cout << RightKey << endl;
-
+{
 	eve_->runEvent(train_distance_);	// distance값으로 이벤트 발생조건 검사
 
 	if (!eve_->getPassOrFail() && train_distance_ < 5) {	// 시간초과 커맨드 실패 판단
@@ -63,7 +61,7 @@ void Running::Update()
 	if (train_distance_ >= 5 && eve_->GetPast() != 0) {
 		eve_->SetTimeOut(true);
 	}
-	
+
 	if (e_score->GetOne() && (eve_->getPassOrFail() == 1))	// 이벤트 점수 부여
 	{
 		PhaseInterface::IncreaseScore(500);
@@ -163,7 +161,7 @@ void Running::Update()
 			g_goal_time_update = true;
 			++g_day;// 시간대 변경
 
-			RightKey = false; 
+			RightKey = false;
 			eve_->SetRightKey(false);
 		}
 	}
@@ -251,6 +249,7 @@ void Running::HandleEvents()
 		case SDL_QUIT:
 			g_flag_running = false;
 			break;
+
 		case SDL_KEYDOWN:
 			if (event.key.keysym.sym == SDLK_RIGHT)
 			{	// 오른쪽 키를 누르면 speed값 증가
@@ -263,7 +262,6 @@ void Running::HandleEvents()
 				RightKey = false;
 				eve_->SetRightKey(false);
 			}
-		default:
 			break;
 		}
 	}
